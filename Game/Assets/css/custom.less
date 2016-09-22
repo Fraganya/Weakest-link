@@ -1,0 +1,232 @@
+//imports
+
+/* Colors */
+
+@base-bg:#E3F2FD;
+@bg-panel:darken(@base-bg,15%);
+@base-text-color:#000;
+@money-item:#00B0FF;
+@online:#00E676;
+@disconnected:#D50000;
+@offline:#F9A825;
+
+/*border settings */
+@radius-less:0px;
+@radius-big:100%;
+@border-main:#2196F3;
+
+/*paddings */
+@std-padding-top:10px;
+
+/* margins */
+@std-margin:1%;
+
+/* font sized */
+@big-font:20px;
+@mid-font:16px;
+
+body
+{
+ background-color:@base-bg;
+ color:@base-text-color;
+ border-top:thick solid @border-main;
+ padding-top:@std-padding-top;
+}
+textarea
+{
+    resize:none;
+}
+// game bar elements
+.game-name
+{
+    font-size:@big-font;
+}
+
+//game containers elements
+.game-panel
+{
+    background-color:@bg-panel;
+    border-color:@base-bg;
+    border-radius:@radius-less;
+    background-size:cover;
+    size:cover;
+}
+.panel-title
+{
+    font-weight:bold;
+}
+.game-panel-header
+{
+    border-bottom:1px solid @border-main;
+    padding:5px;
+    font-size:@big-font;
+    margin-bottom:@std-margin;
+    padding-bottom:5px;
+}
+.table-panel,.player-panel
+{
+    .game-panel;
+    background-color:darken(#E3F2FD,12%);
+}
+.wk-about
+{
+  text-align: center;
+}
+.wk-about .version
+{
+    padding-bottom:5px;
+}
+/*game button styles*/
+.wk-btn
+{
+    background-color:transparent;
+    border-color:@base-bg;
+    border-radius:@radius-less;
+    border-style:groove;
+
+    &:hover{
+        background-color:darken(#E3F2FD,10%);
+    }
+}
+.wk-btn-link
+{
+    .wk-btn;
+    text-decoration:none;
+    color:#000;
+    &:hover{
+        text-decoration:none;
+    }
+}
+.panel-footer-link,
+.panel-footer-link:hover
+{
+    display:block;
+    text-decoration:none;
+    text-align:center;
+    color:lighten(#000,20%);
+}
+
+.modal-header
+{
+    background-color: lighten(#2196F3,10%);
+}
+
+/*contribution page styles*/
+#suggestions
+{
+    margin-bottom:6%;
+}
+.screen-name
+{
+    color:red;
+    padding:5px;
+}
+.error-header ,.error-block
+{
+    display: inline;
+}
+
+/* game play screen styles */
+.session-bar
+{
+    text-align: center;
+    background-color:@online;
+    padding:5px;
+    font-weight:bold;
+    margin-top:-5px;
+    margin-bottom:10px;
+}
+.contestant-list li
+{
+ padding:10px;
+}
+.c-avatar
+{
+    background-color:darken(@base-bg,10%);
+    border:thin solid tansparent;
+    border-radius:@radius-big;
+    padding:9px;
+}
+.well-header
+{
+    margin-bottom:2px;
+}
+.well-game-header
+{
+    background-color:darken(@base-bg,20%);
+}
+ul.money-chain li ,.bank
+{
+    background-color:@money-item;
+    border:thin solid transparent;
+    border-radius:10%;
+    text-align: center;
+    padding:8px;
+    color:#fff;
+    margin:1px;
+}
+.bank ,
+{
+    border-radius:0px;
+    background-color:darken(@money-item,5%);
+}
+.timer
+{
+    .bank;
+    padding:10px;
+    font-size:120%;
+}
+ul.contestant-bar
+{
+    padding:2px;
+    text-align:center;
+}
+ul.contestant-bar li
+{
+    padding:10px;
+    border:1px solid darken(@base-bg,30%);
+    margin-bottom:2px;
+}
+ul.contestant-bar li.active
+{
+    background-color:@online;
+}
+/*helpers */
+.marg-1
+{
+    margin:5px;
+}
+.marg-top
+{
+    margin-top:10px;
+}
+.connectivity(color)
+{
+    background-color:color;
+}
+.slogan
+{ 
+        font-family:cursive;
+}
+
+.incorrect
+{
+    color:red;
+}
+.correct
+{
+    color:@online;
+}
+
+.wk-status-offline
+{
+    color:@offline;
+}
+.wk-status-disconnected
+{
+    color:@disconnected;
+}
+.wk-status-online
+{
+    color:@online;
+}

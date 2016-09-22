@@ -1,0 +1,11 @@
+<?xml version='1.0' encoding='UTF-8' standalone='yes' ?>
+<gamemodifications>
+    <modification>
+        <name>Number of players</name>
+        <detail></detail>
+    </modification>
+    <modification>
+        <name>Round Time</name>
+        <detail></detail>
+    </modification>
+</gamemodifications>
