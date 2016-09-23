@@ -22,16 +22,6 @@ $load=new Asset();
 $load->file('../API/Helpers.php');
 $load->file("../API/Response.php");
 
-/*Test variables
-$_POST['cat']="Modifications";
-$_POST['cmd']='remove-modification';
-$_POST['modID']=1;
-$_POST['field']="real";
-$_POST['value']="contest-Timer";
-*/
-
-
-
 /*-----------------------------------------------------------------------------
 |                       declare global variables                            
 ------------------------------------------------------------------------------*/
