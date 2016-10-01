@@ -36,10 +36,18 @@ switch($cat)
           $infoMgr=new AboutMgr();
           switch($cmd)
           {
-              case 'get-about-info':
+              case 'get-about-info-only':
                   $info=$infoMgr->getAboutInfo();
                   Response::respondWithJSON($info,"about");
                   break;
+              case 'get-about-info-for-about-modal':
+                   $info=$infoMgr->getAboutInfoAB();
+                   Response::respondWithJSON($info,"about");
+                   break;
+              case 'get-about-info-for-credit-modal':
+                   $info=$infoMgr->getAboutInfoCR();
+                   Response::respondWithJSON($info,"about");
+                   break;
               case 'update-info':
                         if(valid(array('field','value'),$_POST))
                         {
@@ -125,8 +133,14 @@ switch($cat)
        switch($cmd)
        {
           case 'get-guides':
-               $guides=$guidesMgr->getGuides();
-               Response::respondWithJSON($guides,"Guides");
+               if(valid('count',$_POST))
+               {
+                  extract($_POST,EXTR_PREFIX_ALL,'Ex');   
+                  $guides=$guidesMgr->getGuides($Ex_count);
+                  Response::respondWithJSON($guides,"Guides");
+                  break;
+               }
+               Response::passive(false);
                break;
           case 'add-guide':
                 if(valid(array('guideName','guideContent'),$_POST))

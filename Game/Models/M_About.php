@@ -15,22 +15,51 @@ class AboutMgr extends WK_MODEL
   **/
     public function getAboutInfo()
     {
-        $this->sql="select * from about";
+        $this->sql="select info from about";
         $this->contactDB();
         while($row=$this->contactMgr->fetchArray(SQLITE3_ASSOC))
         {
-            $this->tempArray['gamename']=$row['gamename'];
             $this->tempArray['gameinfo']=$row['info'];
-            $this->tempArray['version']=$row['version'];
-            $this->tempArray['developer']=$row['developer'];
-            $this->tempArray['contact']=$row['contact'];
-            $this->tempArray['email']=$row['email'];
-            $this->tempArray['overview']=$row['overview'];
         }
 
         return $this->tempArray;
     }
-    
+
+    /**
+    * getAboutInfoAB
+    * retrieve game information for the about dialog
+    * @return	array
+    **/
+    public function getAboutInfoAB()
+    {
+        $this->sql="select gamename,version,overview from about";
+        $this->contactDB();
+        while($row=$this->contactMgr->fetchArray(SQLITE3_ASSOC))
+        {
+            $this->tempArray['gamename']=$row['gamename'];
+            $this->tempArray['version']=$row['version'];
+            $this->tempArray['overview']=$row['overview'];
+        }
+        return $this->tempArray;
+    }
+
+    /**
+    * getAboutInfoAB
+    * retrieve game information for the about dialog
+    * @return	array
+    **/
+    public function getAboutInfoCR()
+    {
+        $this->sql="select developer,email,website from about";
+        $this->contactDB();
+        while($row=$this->contactMgr->fetchArray(SQLITE3_ASSOC))
+        {
+            $this->tempArray['developer']=$row['developer'];
+            $this->tempArray['website']=$row['website'];
+            $this->tempArray['email']=$row['email'];
+        }
+        return $this->tempArray;
+    }
     /**
     * updateAboutInfo
     * update field of the about game table

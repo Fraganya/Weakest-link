@@ -45,3 +45,8 @@ $RECYCLE.BIN/
 Network Trash Folder
 Temporary Items
 .apdisk
+
+#jsx module directories
+Game/**/.module-cache
+/nbproject/private/
+nbproject/

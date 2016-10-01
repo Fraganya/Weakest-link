@@ -25,7 +25,6 @@ class WK_MODEL extends sqlite3
         {
             $this->contactMgr=$this->exec($this->sql);
         }
-        echo $this->sql."<br/>";
         if(!$this->contactMgr)
         {
             die("Contact Mgr is null-".$this->lastErrorMsg());

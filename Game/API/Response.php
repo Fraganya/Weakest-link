@@ -8,9 +8,7 @@ class Response
 
     public static function respondWithJSON($arr,$j_object)
     {
-        echo "{'{$j_object}':";
         echo json_encode($arr);
-        echo "}";
     }
 }
 ?>
