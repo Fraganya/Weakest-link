@@ -181,3 +181,6 @@ ul.contestant-bar li.active {
 .wk-status-online {
   color: #00E676;
 }
+.validation-error {
+  border-color: red;
+}

@@ -1,22 +1,25 @@
-var PlayerEntry=React.createClass({displayName: "PlayerEntry",
-    validate:function()
-    {
 
-    },
+/**
+ * the player Entry class from which input fields are built
+ */
+var PlayerEntry=React.createClass({displayName: "PlayerEntry",
     render:function()
     { 
         return (
+          React.createElement("div", null, 
           React.createElement("div", {className: "form-group "}, 
             React.createElement("label", {className: "section-label col-sm-12"}, "Player ", this.props.cnum), 
+
             React.createElement("div", {className: "col-sm-4"}, 
-            React.createElement("input", {type: "text", className: "form-control", ref: "pFname", placeholder: "First-name"})
+            React.createElement("input", {type: "text", className: "form-control wk-input", id: 'player-fname-'+this.props.cnum, ref: "pFname", placeholder: "First-name"})
             ), 
             React.createElement("div", {className: "col-sm-4"}, 
-            React.createElement("input", {type: "text", className: "form-control", placeholder: "Surname"})
+            React.createElement("input", {type: "text", className: "form-control wk-input", id: 'player-sname-'+this.props.cnum, placeholder: "Surname"})
             ), 
             React.createElement("div", {className: "col-sm-4"}, 
-            React.createElement("input", {type: "text", className: "form-control", placeholder: "Location (e.g Blantyre)"})
+            React.createElement("input", {type: "text", className: "form-control wk-input", id: 'player-location-'+this.props.cnum, placeholder: "Location (e.g Blantyre)"})
             )
+         )
          )
         );
     }
@@ -29,37 +32,102 @@ getInitialState:function()
              step:'init',
            };
 },
+/**
+ * reset setup modal to the initial state
+ */
 reset:function()
 {
-    this.setState({step:'init',inactiveErrors:0,playerCount:0});
+    this.setState({step:'init',inactiveErrors:0,playerCount:0,players:[]});
 },
+/**
+ * handle changes before updatading
+ */
+componentDidUpdate:function()
+{
+    // check if the state is registration
+    if(this.state.step=='register-game')
+    {
+        players=  this.state.players,
+        parentObj=this;
+        console.log("The game is registering - sending update");
+        $.post('.?controller=Game&method=register',
+             {
+                 players,
+                 difficulty:parentObj.state.gameDifficulty
+             }
+             ,
+            function(data,status){
+                if(data=='true')
+                {
+                    console.log("registerd successfuly");
+                }
+                else{
+                    console.log(status+'=='+data);
+                    console.log('something wrong happend');
+                }
+            })
+    }
+},
+/**
+ * handle step change of the setup modal
+ */
 onStepInit:function()
 {
     this.setState({playerCount:this.refs.playerNum.value});
     this.setState({gameDifficulty:this.refs.difficulty.value});
     this.setState({step:'get-names'});
-    this.setState({inactiveErrors:(this.refs.playerNum.value)*3});
+    var obj=this;
+    setTimeout(function() {
+        obj.buildFields()
+    },5);
 },
+/**
+ * build the player fields based on the number of players
+ */
 buildFields:function()
 {
     var arr=[];
     for(var counter=1;counter<=this.state.playerCount;counter++)
     {
-        arr.push(counter);
+        arr.push(React.createElement(PlayerEntry, {cnum: counter, key: counter}));
     }
-    return arr;
+    this.setState({players:arr});
 },
+/**
+ * validate the user input and register the game on the server
+ */
 registerGame:function()
 {
-    if(this.state.inactiveErrors!=0)
+    var arr=$('.wk-input');
+    var errors=0;
+    arr.map(function(index,input){
+        if(input.value.trim().length==0){
+            $(this).addClass('animated shake validation-error');
+            errors++;
+        }
+    });
+
+    setTimeout(function() {
+        $(".wk-input").removeClass('animated shake validation-error');
+    }, 1500);
+
+    if(errors!=0) return;
+    var contestants=[];
+    var current_player;
+
+    for(var index=0;index<arr.length;index+=3)
     {
-        console.log($('#player-1').children());
-        return false;
+        current_player={fname:arr[index].value,sname:arr[index+1].value,location:arr[index+2].value};
+        contestants.push(current_player);
     }
-    this.setState({step:'registration'});
+    this.setState({step:'register-game',players:contestants});
 },
 getInitialData:function()
 {
+    /**
+     * playerNums - allowed sets of players
+     * difficulties - available game difficulties
+     */
     var playerNums=[2,4,5,6,7,8,9];
     var difficulties=['Easy','Medium','Brainy'];
     return(
@@ -94,23 +162,40 @@ getInitialData:function()
         
     );
 },
+/**
+ *  setup modal is in get-names state
+ *  initialise the contestant inputs
+ */
 getNames:function()
 {
     return (
             React.createElement("form", {className: "form-horizontal col-sm-12"}, 
             React.createElement("div", {className: "well well-sm", ref: "registrationStatus"}, "Fill in the details"), 
-             this.buildFields().map(function(index){
-                 return (React.createElement(PlayerEntry, {cnum: index, key: index}));         
-             }), 
-            React.createElement("div", {className: "form-group col-sm-12"}, 
+             this.state.players, 
+              React.createElement("div", {className: "form-group col-sm-12"}, 
               React.createElement("button", {className: "btn wk-btn marg-1", type: "button", onClick: this.registerGame, ref: "reg-btn"}, "Register"), 
               React.createElement("button", {className: "btn wk-btn marg-1 glyphicon glyphicon-chevron-left", type: "button", onClick: this.reset})
             )
             )
     );
 },
+/** 
+* display registration progress
+* register the game
+*/
+registration:function()
+{
+    return(
+        React.createElement("div", null, 
+        "Registering game on the server"
+        )
+    );
+},
 render:function()
 {
+    /**
+     * choose the appropriate function to call in the render
+     */
     var aproFNX=null;
     if(this.state.step=='setup-session')
     {
@@ -119,6 +204,10 @@ render:function()
     else if(this.state.step=='get-names')
     {
         aproFNX=this.getNames;
+    }
+    else if (this.state.step=='register-game')
+    {
+        aproFNX=this.registration;
     }
     else
     {
@@ -146,4 +235,7 @@ render:function()
 
 });
 
+/**
+ * render the elements
+ */
 ReactDOM.render(React.createElement(SetupModal, null),document.getElementById('setup-modal'));

@@ -9,7 +9,7 @@
 */
 
 $routes['Setup']=array("index","installation","bug");
-$routes['Game']=array("index","play","contributions","scores");
+$routes['Game']=array("index","register","play","contributions","scores");
 
 
 ?>
