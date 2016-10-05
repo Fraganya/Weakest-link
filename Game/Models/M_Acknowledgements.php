@@ -1,8 +1,14 @@
 <?php 
 require_once('M_WK.php');
+/**
+ * handles all requests to do with acknowledgements
+ */
 class AcknowledgementMgr extends WK_MODEL
 {
     # call parent constructor to open database
+    /**
+     * calls the parent constructor
+     */
     public function __construct()
     {
         parent::__construct();
@@ -10,7 +16,7 @@ class AcknowledgementMgr extends WK_MODEL
 
     /**
     * getAcknowldgements
-    * retrieve acknowledgement info
+    * retrieves acknowledgement info
     * @return	array
     **/
     public function getAcknowledgements()
@@ -30,7 +36,7 @@ class AcknowledgementMgr extends WK_MODEL
 
     /**
     * addAcknowldgements
-    *  add acknowledgement info
+    *  adds acknowledgement info
     * @param project
     * @param website
     * @return	boolean
@@ -44,7 +50,7 @@ class AcknowledgementMgr extends WK_MODEL
 
     /**
     * updateAcknowldgements
-    * update  acknowledgement info
+    * updates  acknowledgement info
     * @param id
     * @param field
     * @param value

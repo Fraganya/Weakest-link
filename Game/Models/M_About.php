@@ -1,8 +1,17 @@
 <?php
 require_once('M_WK.php');
+
+/**
+ * AboutMgr class handles all requests to do with the about game data
+ * inherits properties and functions from WK_MODEL
+ * @author Francis ganya
+ */
 class AboutMgr extends WK_MODEL
 {
     # call parent constructor
+    /**
+     * calls the parent constructor
+     */
     public function __construct()
     {
        parent::__construct();
@@ -10,7 +19,7 @@ class AboutMgr extends WK_MODEL
     
   /**
   * getAboutInfo
-  * retrieve game information
+  * retrieves game information
   * @return	array
   **/
     public function getAboutInfo()
@@ -27,7 +36,7 @@ class AboutMgr extends WK_MODEL
 
     /**
     * getAboutInfoAB
-    * retrieve game information for the about dialog
+    * retrieves game information for the about dialog
     * @return	array
     **/
     public function getAboutInfoAB()
@@ -45,7 +54,7 @@ class AboutMgr extends WK_MODEL
 
     /**
     * getAboutInfoAB
-    * retrieve game information for the about dialog
+    * retrieves game information for the about dialog
     * @return	array
     **/
     public function getAboutInfoCR()
@@ -62,7 +71,7 @@ class AboutMgr extends WK_MODEL
     }
     /**
     * updateAboutInfo
-    * update field of the about game table
+    * updates field of the about game table
     * @param field
     * @param value
     * @return	boolean

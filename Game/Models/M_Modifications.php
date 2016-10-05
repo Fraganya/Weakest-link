@@ -1,5 +1,8 @@
 <?php
 require_once'M_WK.php';
+/**
+ * handles all request to do with game modifications
+ */
 class ModificationsMgr extends WK_MODEL
 {
     # call parent constructor to load db
@@ -10,7 +13,7 @@ class ModificationsMgr extends WK_MODEL
 
     /**
     * getModifications
-    * get modifications
+    * gets modifications
     * @return array
     **/
     public function getModifications()
@@ -32,7 +35,7 @@ class ModificationsMgr extends WK_MODEL
 
     /**
     * addModification
-    * add a modification
+    * adds a modification
     * @param modification 
     * @param real 
     * @param changees
@@ -47,7 +50,7 @@ class ModificationsMgr extends WK_MODEL
 
     /**
     * removeModification
-    * remove a Modification 
+    * removes a Modification 
     * @param modID
     * @return	boolean
     **/
@@ -60,7 +63,7 @@ class ModificationsMgr extends WK_MODEL
 
     /**
     * updateModification
-    * update a modification's info
+    * updates a modification's info
     * @param modID
     * @param field
     * @param value

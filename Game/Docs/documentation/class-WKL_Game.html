@@ -1,0 +1,350 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="utf-8">
+
+	<title>Class WKL_Game | Weakest-link</title>
+
+	<link rel="stylesheet" href="resources/style.css?e99947befd7bf673c6b43ff75e9e0f170c88a60e">
+
+</head>
+
+<body>
+<div id="left">
+	<div id="menu">
+		<a href="index.html" title="Overview"><span>Overview</span></a>
+
+
+		<div id="groups">
+		</div>
+
+
+
+		<div id="elements">
+			<h3>Classes</h3>
+			<ul>
+				<li><a href="class-AboutMgr.html">AboutMgr</a></li>
+				<li><a href="class-AcknowledgementMgr.html">AcknowledgementMgr</a></li>
+				<li><a href="class-Asset.html">Asset</a></li>
+				<li><a href="class-ContributorMgr.html">ContributorMgr</a></li>
+				<li><a href="class-Game.html">Game</a></li>
+				<li><a href="class-GuideMgr.html">GuideMgr</a></li>
+				<li><a href="class-ModificationsMgr.html">ModificationsMgr</a></li>
+				<li><a href="class-Response.html">Response</a></li>
+				<li><a href="class-Screen.html">Screen</a></li>
+				<li><a href="class-Session.html">Session</a></li>
+				<li><a href="class-Setup.html">Setup</a></li>
+				<li><a href="class-WK_MODEL.html">WK_MODEL</a></li>
+				<li class="active"><a href="class-WKL_Game.html">WKL_Game</a></li>
+			</ul>
+
+
+
+
+
+			<h3>Functions</h3>
+			<ul>
+				<li><a href="function-errHandler.html">errHandler</a></li>
+				<li><a href="function-error_handler.html">error_handler</a></li>
+				<li><a href="function-is_routable.html">is_routable</a></li>
+				<li><a href="function-show_404.html">show_404</a></li>
+				<li><a href="function-valid.html">valid</a></li>
+			</ul>
+		</div>
+	</div>
+</div>
+
+<div id="splitter"></div>
+
+<div id="right">
+<div id="rightInner">
+	<form id="search">
+		<input type="hidden" name="cx" value="">
+		<input type="hidden" name="ie" value="UTF-8">
+		<input type="text" name="q" class="text" placeholder="Search">
+	</form>
+
+	<div id="navigation">
+		<ul>
+			<li>
+				<a href="index.html" title="Overview"><span>Overview</span></a>
+			</li>
+			<li class="active">
+<span>Class</span>			</li>
+		</ul>
+		<ul>
+		</ul>
+		<ul>
+		</ul>
+	</div>
+
+<div id="content" class="class">
+	<h1>Class WKL_Game</h1>
+
+
+	<div class="description">
+	<p>Handles all requests to do with the game registration and play</p>
+	</div>
+
+
+
+
+
+
+
+
+
+	<div class="info">
+		
+		
+		
+		
+
+			<b>Located at</b> <a href="source-class-WKL_Game.html#2-111" title="Go to source code">Game/Models/M_Game.php</a>
+		<br>
+	</div>
+
+
+
+	<table class="summary methods" id="methods">
+	<caption>Methods summary</caption>
+	<tr data-order="__construct" id="___construct">
+
+		<td class="attributes"><code>
+			 public 
+
+			
+			
+			</code>
+		</td>
+
+		<td class="name"><div>
+		<a class="anchor" href="#___construct">#</a>
+		<code><a href="source-class-WKL_Game.html#23-34" title="Go to source code">__construct</a>( )</code>
+
+		<div class="description short">
+			<p>initialises the connection object</p>
+		</div>
+
+		<div class="description detailed hidden">
+			<p>initialises the connection object</p>
+
+
+
+
+
+
+
+		</div>
+		</div></td>
+	</tr>
+	<tr data-order="setSql" id="_setSql">
+
+		<td class="attributes"><code>
+			 public 
+
+			
+			
+			</code>
+		</td>
+
+		<td class="name"><div>
+		<a class="anchor" href="#_setSql">#</a>
+		<code><a href="source-class-WKL_Game.html#36-43" title="Go to source code">setSql</a>( <span>string <var>$query</var></span> )</code>
+
+		<div class="description short">
+			<p>sanitized the string and sets it as a query to be executed in the next query calls</p>
+		</div>
+
+		<div class="description detailed hidden">
+			<p>sanitized the string and sets it as a query to be executed in the next query calls</p>
+
+
+				<h4>Parameters</h4>
+				<div class="list"><dl>
+					<dt><var>$query</var></dt>
+					<dd></dd>
+				</dl></div>
+
+
+
+
+
+		</div>
+		</div></td>
+	</tr>
+	<tr data-order="contactDB" id="_contactDB">
+
+		<td class="attributes"><code>
+			 public 
+
+			
+			
+			</code>
+		</td>
+
+		<td class="name"><div>
+		<a class="anchor" href="#_contactDB">#</a>
+		<code><a href="source-class-WKL_Game.html#45-64" title="Go to source code">contactDB</a>( <span>boolean <var>$multi</var> = <span class="php-keyword1">FALSE</span></span> )</code>
+
+		<div class="description short">
+			<p>executes the query in the set sql variable</p>
+		</div>
+
+		<div class="description detailed hidden">
+			<p>executes the query in the set sql variable</p>
+
+
+				<h4>Parameters</h4>
+				<div class="list"><dl>
+					<dt><var>$multi</var></dt>
+					<dd></dd>
+				</dl></div>
+
+
+
+
+
+		</div>
+		</div></td>
+	</tr>
+	<tr data-order="createGame" id="_createGame">
+
+		<td class="attributes"><code>
+			 public 
+
+			boolean
+			
+			</code>
+		</td>
+
+		<td class="name"><div>
+		<a class="anchor" href="#_createGame">#</a>
+		<code><a href="source-class-WKL_Game.html#66-88" title="Go to source code">createGame</a>( <span>object <var>&amp; $game</var></span> )</code>
+
+		<div class="description short">
+			<p>registers the game in the database
+and gets the registered game id to be used during player registration</p>
+		</div>
+
+		<div class="description detailed hidden">
+			<p>registers the game in the database
+and gets the registered game id to be used during player registration</p>
+
+
+				<h4>Parameters</h4>
+				<div class="list"><dl>
+					<dt><var>$game</var></dt>
+					<dd></dd>
+				</dl></div>
+
+				<h4>Returns</h4>
+				<div class="list">
+					boolean
+				</div>
+
+
+
+
+		</div>
+		</div></td>
+	</tr>
+	<tr data-order="register_players" id="_register_players">
+
+		<td class="attributes"><code>
+			 public 
+
+			boolean
+			
+			</code>
+		</td>
+
+		<td class="name"><div>
+		<a class="anchor" href="#_register_players">#</a>
+		<code><a href="source-class-WKL_Game.html#90-110" title="Go to source code">register_players</a>( <span>integer <var>$gameID</var></span>, <span>array <var>$players</var></span> )</code>
+
+		<div class="description short">
+			<p>registers the players in the database using the just registerd game id</p>
+		</div>
+
+		<div class="description detailed hidden">
+			<p>registers the players in the database using the just registerd game id</p>
+
+
+				<h4>Parameters</h4>
+				<div class="list"><dl>
+					<dt><var>$gameID</var></dt>
+					<dd></dd>
+					<dt><var>$players</var></dt>
+					<dd></dd>
+				</dl></div>
+
+				<h4>Returns</h4>
+				<div class="list">
+					boolean
+				</div>
+
+
+
+
+		</div>
+		</div></td>
+	</tr>
+	</table>
+
+
+
+
+
+
+
+
+
+
+
+
+	<table class="summary properties" id="properties">
+	<caption>Properties summary</caption>
+	<tr data-order="contactMgr" id="$contactMgr">
+		<td class="attributes"><code>
+			public  
+			object
+		</code></td>
+
+		<td class="name">
+				<a href="source-class-WKL_Game.html#17-21" title="Go to source code"><var>$contactMgr</var></a>
+
+			<div class="description short">
+				<p>Holds the result of the recent database query</p>
+			</div>
+
+			<div class="description detailed hidden">
+				<p>Holds the result of the recent database query</p>
+
+			</div>
+		</td>
+		<td class="value">
+			<div>
+				<a href="#$contactMgr" class="anchor">#</a>
+				<code></code>
+			</div>
+		</td>
+	</tr>
+	</table>
+
+
+
+
+
+
+</div>
+
+	<div id="footer">
+		Weakest-link API documentation generated by <a href="http://apigen.org">ApiGen</a>
+	</div>
+</div>
+</div>
+<script src="resources/combined.js"></script>
+<script src="elementlist.js"></script>
+</body>
+</html>

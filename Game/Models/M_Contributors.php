@@ -1,8 +1,14 @@
 <?php
 require_once('M_WK.php');
+/**
+ * handles all requests to do with contributions
+ */
 class ContributorMgr extends WK_MODEL
 {
     # call parent constructor to load db
+    /**
+     * class the parent constructor to load db
+     */
     public function __construct()
     {
         parent::__construct();
@@ -10,7 +16,7 @@ class ContributorMgr extends WK_MODEL
     
     /**
     * getContributors
-    * retrieve contributors info
+    * retrieves contributors info
     * @return	array
     **/
     public function getContributors()
@@ -30,7 +36,7 @@ class ContributorMgr extends WK_MODEL
 
     /**
     * addContributor
-    * add contributor
+    * adds contributor
     * @return	boolean
     **/
     public function addContributor($fname,$sname)
@@ -42,7 +48,7 @@ class ContributorMgr extends WK_MODEL
 
     /**
     * updateContributor
-    * update contributor info
+    * updates contributor info
     * @return	boolean
     **/
     public function updateContributor($id,$contribution_count)

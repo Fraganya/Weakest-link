@@ -1,0 +1,378 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="utf-8">
+
+	<title>Class ModificationsMgr | Weakest-link</title>
+
+	<link rel="stylesheet" href="resources/style.css?e99947befd7bf673c6b43ff75e9e0f170c88a60e">
+
+</head>
+
+<body>
+<div id="left">
+	<div id="menu">
+		<a href="index.html" title="Overview"><span>Overview</span></a>
+
+
+		<div id="groups">
+		</div>
+
+
+
+		<div id="elements">
+			<h3>Classes</h3>
+			<ul>
+				<li><a href="class-AboutMgr.html">AboutMgr</a></li>
+				<li><a href="class-AcknowledgementMgr.html">AcknowledgementMgr</a></li>
+				<li><a href="class-Asset.html">Asset</a></li>
+				<li><a href="class-ContributorMgr.html">ContributorMgr</a></li>
+				<li><a href="class-Game.html">Game</a></li>
+				<li><a href="class-GuideMgr.html">GuideMgr</a></li>
+				<li class="active"><a href="class-ModificationsMgr.html">ModificationsMgr</a></li>
+				<li><a href="class-Response.html">Response</a></li>
+				<li><a href="class-Screen.html">Screen</a></li>
+				<li><a href="class-Session.html">Session</a></li>
+				<li><a href="class-Setup.html">Setup</a></li>
+				<li><a href="class-WK_MODEL.html">WK_MODEL</a></li>
+				<li><a href="class-WKL_Game.html">WKL_Game</a></li>
+			</ul>
+
+
+
+
+
+			<h3>Functions</h3>
+			<ul>
+				<li><a href="function-errHandler.html">errHandler</a></li>
+				<li><a href="function-error_handler.html">error_handler</a></li>
+				<li><a href="function-is_routable.html">is_routable</a></li>
+				<li><a href="function-show_404.html">show_404</a></li>
+				<li><a href="function-valid.html">valid</a></li>
+			</ul>
+		</div>
+	</div>
+</div>
+
+<div id="splitter"></div>
+
+<div id="right">
+<div id="rightInner">
+	<form id="search">
+		<input type="hidden" name="cx" value="">
+		<input type="hidden" name="ie" value="UTF-8">
+		<input type="text" name="q" class="text" placeholder="Search">
+	</form>
+
+	<div id="navigation">
+		<ul>
+			<li>
+				<a href="index.html" title="Overview"><span>Overview</span></a>
+			</li>
+			<li class="active">
+<span>Class</span>			</li>
+		</ul>
+		<ul>
+		</ul>
+		<ul>
+		</ul>
+	</div>
+
+<div id="content" class="class">
+	<h1>Class ModificationsMgr</h1>
+
+
+	<div class="description">
+	<p>handles all request to do with game modifications</p>
+	</div>
+
+	<dl class="tree">
+		<dd style="padding-left:0px">
+sqlite3
+			
+			
+		</dd>
+		<dd style="padding-left:30px">
+			<img src="resources/inherit.png" alt="Extended by">
+			<a href="class-WK_MODEL.html"><span>WK_MODEL</span></a>
+			
+			
+			
+		</dd>
+		<dd style="padding-left:60px">
+			<img src="resources/inherit.png" alt="Extended by">
+<b><span>ModificationsMgr</span></b>			
+			
+			
+		</dd>
+	</dl>
+
+
+
+
+
+
+
+
+	<div class="info">
+		
+		
+		
+		
+
+			<b>Located at</b> <a href="source-class-ModificationsMgr.html#3-78" title="Go to source code">Game/Models/M_Modifications.php</a>
+		<br>
+	</div>
+
+
+
+	<table class="summary methods" id="methods">
+	<caption>Methods summary</caption>
+	<tr data-order="__construct" id="___construct">
+
+		<td class="attributes"><code>
+			 public 
+
+			
+			
+			</code>
+		</td>
+
+		<td class="name"><div>
+		<a class="anchor" href="#___construct">#</a>
+		<code><a href="source-class-ModificationsMgr.html#9-12" title="Go to source code">__construct</a>( )</code>
+
+		<div class="description short">
+			<p>loads the db</p>
+		</div>
+
+		<div class="description detailed hidden">
+			<p>loads the db</p>
+
+
+
+
+
+
+				<h4>Overrides</h4>
+				<div class="list"><code><a href="class-WK_MODEL.html#___construct">WK_MODEL::__construct()</a></code></div>
+
+		</div>
+		</div></td>
+	</tr>
+	<tr data-order="getModifications" id="_getModifications">
+
+		<td class="attributes"><code>
+			 public 
+
+			array
+			
+			</code>
+		</td>
+
+		<td class="name"><div>
+		<a class="anchor" href="#_getModifications">#</a>
+		<code><a href="source-class-ModificationsMgr.html#14-34" title="Go to source code">getModifications</a>( )</code>
+
+		<div class="description short">
+			<p>getModifications
+gets modifications</p>
+		</div>
+
+		<div class="description detailed hidden">
+			<p>getModifications
+gets modifications</p>
+
+
+
+				<h4>Returns</h4>
+				<div class="list">
+					array
+				</div>
+
+
+
+
+		</div>
+		</div></td>
+	</tr>
+	<tr data-order="addModification" id="_addModification">
+
+		<td class="attributes"><code>
+			 public 
+
+			boolean
+			
+			</code>
+		</td>
+
+		<td class="name"><div>
+		<a class="anchor" href="#_addModification">#</a>
+		<code><a href="source-class-ModificationsMgr.html#36-49" title="Go to source code">addModification</a>( <span>modification <var>$mod</var></span>, <span>real <var>$real</var></span>, <span>changees <var>$changes</var></span> )</code>
+
+		<div class="description short">
+			<p>addModification
+adds a modification</p>
+		</div>
+
+		<div class="description detailed hidden">
+			<p>addModification
+adds a modification</p>
+
+
+				<h4>Parameters</h4>
+				<div class="list"><dl>
+					<dt><var>$mod</var></dt>
+					<dd></dd>
+					<dt><var>$real</var></dt>
+					<dd></dd>
+					<dt><var>$changes</var></dt>
+					<dd></dd>
+				</dl></div>
+
+				<h4>Returns</h4>
+				<div class="list">
+					boolean
+				</div>
+
+
+
+
+		</div>
+		</div></td>
+	</tr>
+	<tr data-order="removeModification" id="_removeModification">
+
+		<td class="attributes"><code>
+			 public 
+
+			boolean
+			
+			</code>
+		</td>
+
+		<td class="name"><div>
+		<a class="anchor" href="#_removeModification">#</a>
+		<code><a href="source-class-ModificationsMgr.html#51-62" title="Go to source code">removeModification</a>( <span>modID <var>$modID</var></span> )</code>
+
+		<div class="description short">
+			<p>removeModification
+removes a Modification</p>
+		</div>
+
+		<div class="description detailed hidden">
+			<p>removeModification
+removes a Modification</p>
+
+
+				<h4>Parameters</h4>
+				<div class="list"><dl>
+					<dt><var>$modID</var></dt>
+					<dd></dd>
+				</dl></div>
+
+				<h4>Returns</h4>
+				<div class="list">
+					boolean
+				</div>
+
+
+
+
+		</div>
+		</div></td>
+	</tr>
+	<tr data-order="updateModification" id="_updateModification">
+
+		<td class="attributes"><code>
+			 public 
+
+			boolean
+			
+			</code>
+		</td>
+
+		<td class="name"><div>
+		<a class="anchor" href="#_updateModification">#</a>
+		<code><a href="source-class-ModificationsMgr.html#64-77" title="Go to source code">updateModification</a>( <span>modID <var>$modID</var></span>, <span>field <var>$field</var></span>, <span>value <var>$value</var></span> )</code>
+
+		<div class="description short">
+			<p>updateModification
+updates a modification's info</p>
+		</div>
+
+		<div class="description detailed hidden">
+			<p>updateModification
+updates a modification's info</p>
+
+
+				<h4>Parameters</h4>
+				<div class="list"><dl>
+					<dt><var>$modID</var></dt>
+					<dd></dd>
+					<dt><var>$field</var></dt>
+					<dd></dd>
+					<dt><var>$value</var></dt>
+					<dd></dd>
+				</dl></div>
+
+				<h4>Returns</h4>
+				<div class="list">
+					boolean
+				</div>
+
+
+
+
+		</div>
+		</div></td>
+	</tr>
+	</table>
+
+	<table class="summary inherited">
+	<caption>Methods inherited from <a href="class-WK_MODEL.html#methods">WK_MODEL</a></caption>
+	<tr>
+		<td><code>
+			<a href="class-WK_MODEL.html#_contactDB">contactDB()</a>
+		</code></td>
+	</tr>
+	</table>
+
+
+
+
+
+
+
+
+
+
+
+
+	<table class="summary inherited">
+	<caption>Properties inherited from <a href="class-WK_MODEL.html#properties">WK_MODEL</a></caption>
+	<tr>
+		<td><code>
+			<a href="class-WK_MODEL.html#$contactMgr"><var>$contactMgr</var></a>, 
+			<a href="class-WK_MODEL.html#$dbFile"><var>$dbFile</var></a>, 
+			<a href="class-WK_MODEL.html#$sql"><var>$sql</var></a>, 
+			<a href="class-WK_MODEL.html#$tempArray"><var>$tempArray</var></a>
+		</code></td>
+	</tr>
+	</table>
+
+
+
+
+
+</div>
+
+	<div id="footer">
+		Weakest-link API documentation generated by <a href="http://apigen.org">ApiGen</a>
+	</div>
+</div>
+</div>
+<script src="resources/combined.js"></script>
+<script src="elementlist.js"></script>
+</body>
+</html>

@@ -45,7 +45,7 @@ reset:function()
 componentDidUpdate:function()
 {
     // check if the state is registration
-    if(this.state.step=='register-game')
+    if(this.state.step=='register-game' && this.state.status!='registered')
     {
         players=  this.state.players,
         parentObj=this;
@@ -53,12 +53,15 @@ componentDidUpdate:function()
         $.post('.?controller=Game&method=register',
              {
                  players,
-                 difficulty:parentObj.state.gameDifficulty
+                 difficulty:parentObj.state.gameDifficulty,
+                 typeof:'offline'
              }
              ,
             function(data,status){
-                if(data=='true')
+                if(data!='false')
                 {
+                    var gameObj=JSON.parse(data);
+                    parentObj.setState({game_id:gameObj.game_id,status:'registered',});
                     console.log("registerd successfuly");
                 }
                 else{
@@ -75,7 +78,7 @@ onStepInit:function()
 {
     this.setState({playerCount:this.refs.playerNum.value});
     this.setState({gameDifficulty:this.refs.difficulty.value});
-    this.setState({step:'get-names'});
+    this.setState({step:'get-names',status:'registering'});
     var obj=this;
     setTimeout(function() {
         obj.buildFields()
@@ -185,9 +188,28 @@ getNames:function()
 */
 registration:function()
 {
+    var parentObj=this;
+    var aproUpdate=null;
+    if(this.state.status=='registering')
+    {
+        aproUpdate=function(){
+            return(
+                 <div>
+                   <div className="loader" />
+                   <div className="com-status">Registering Game</div>
+                 </div>                              
+                )
+        }
+    }
+    else{
+        aproUpdate=function(){ 
+            return (<a className="btn btn-link wk-btn-link" href={'.?controller=Game&method=play&id='+parentObj.state.game_id}>Play</a>)
+        }
+        
+    }
     return(
-        <div>
-        Registering game on the server
+        <div className='text-center'>
+             <div>{aproUpdate()}</div>
         </div>
     );
 },

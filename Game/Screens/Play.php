@@ -23,7 +23,7 @@ echo  $load->css("custom")
 <div class="container">
     <div class="session-bar col-sm-3 col-xs-12 col-sm-offset-5 ">
     <span class="">Session</span>
-    <span class="session-id">wkl-1234</span>
+    <span class="session-id"><?php echo $session; ?></span>
     </div>
 </div><!-- end of Game session bar section -->
 <div class="container">

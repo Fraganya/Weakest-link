@@ -10,7 +10,7 @@
 /**
 * is_routable
 * checks if the passed in controller and function names exist
-* 
+* returns true if successful otherwise false 
 * @param	string
 * @param	string
 * @return	bool

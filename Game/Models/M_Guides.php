@@ -1,5 +1,8 @@
 <?php
 require_once("M_WK.php");
+/**
+ * handles all requests to do with game guides
+ */
 class GuideMgr extends WK_MODEL
 {
     # call parent constuctor to load db
@@ -10,7 +13,7 @@ class GuideMgr extends WK_MODEL
 
     /**
     *getGuides
-    * retrieve guide information
+    * retrieves guide information
     * @return array
     **/
     public function getGuides($count)
@@ -30,7 +33,7 @@ class GuideMgr extends WK_MODEL
 
     /**
     * addGuide
-    * add a guide 
+    * adds a guide 
     * @param guideName
     * @param guideContent
     * @return	boolean
@@ -44,7 +47,7 @@ class GuideMgr extends WK_MODEL
 
     /**
     * removeGuide
-    * remove a guide 
+    * removes a guide 
     * @param guideId
     * @return	boolean
     **/
@@ -57,7 +60,7 @@ class GuideMgr extends WK_MODEL
 
     /**
     * updateGuide
-    * update a guide 
+    * updates a guide 
     * @param guideId
     * @param field
     * @param value

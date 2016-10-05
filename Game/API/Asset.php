@@ -1,9 +1,12 @@
 <?php
+/**
+ * Asset class for loading resources [files]
+ * @author Francis ganya
+ */
   class Asset{
   /**
   * js
-  * create a formatted javascript html tag
-  *
+  * creates a formatted javascript html tag
   * @param	string file name
   * @param	string type of script
   * @return	string
@@ -15,7 +18,7 @@
 
   /**
   * css
-  * create a formatted css html link tag
+  * creates a formatted css html link tag
   *
   * @param	string file name
   * @return	string
@@ -27,8 +30,7 @@
 
   /**
   * image
-  * create a formatted image html tag
-  *
+  * creates a formatted image html tag
   * @param	string file name
   * @param	string css class
   * @param  string alt name
@@ -42,7 +44,6 @@
   /**
   * file
   * includes the specified file after checking existence
-  *
   * @param	string file path
   * @param  string $data any items that the required file may need from the owner
   * @return	bool
@@ -70,8 +71,7 @@
   
   /**
   * link
-  * create a formatted  html link tag
-  *
+  * creates a formatted  html link tag
   * @param	string file name
   * @return	string
   */
