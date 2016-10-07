@@ -14,7 +14,8 @@ $load=new Asset();
 ------------------------------------------------------------------------------*/
 $load->file(SCREENSPATH.'Common/Styles.php',array('load'=>$load));
 echo  $load->css("font-awesome");
-echo  $load->css("custom")
+echo  $load->css("custom");
+ echo  $load->icon('favicon');
 ?>
 <title><?php echo $title; ?></title>
 </head>
