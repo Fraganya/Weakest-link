@@ -34,10 +34,10 @@ class WKL_Game
     }
     
     /**
-     * sanitized the string and sets it as a query to be executed in the next query calls
+     * sanitizes the string and sets it as a query to be executed in the next query calls
      * @param string $query
      */
-    public function setSql($query)
+    protected function _setSql($query)
     {
        $this->sql=$query;
     }
@@ -46,7 +46,7 @@ class WKL_Game
      * executes the query in the set sql variable
      * @param bool $multi
      */
-    public function contactDB($multi=FALSE)
+    protected function _contactDB($multi=FALSE)
     {
         //$this->sql=$this->connection->escape_string($this->sql);
 
@@ -74,12 +74,12 @@ class WKL_Game
        //create the game
        $query=sprintf("insert into wkl_games(team_tag,player_count,status,difficulty,type) values('%s','%s','%s','%s','%s')",
                      $game->teamTag,$game->player_count('GET'),$game->status('GET'),$game->difficulty('GET'),$game->type);
-       $this->setSql($query);
-       $this->contactDB();
+       $this->_setSql($query);
+       $this->_contactDB();
 
        //get the created game id
-       $this->setSql("select game_id from wkl_games order by game_id desc limit 1");
-       $this->contactDB();
+       $this->_setSql("select game_id from wkl_games order by game_id desc limit 1");
+       $this->_contactDB();
        
        $this->contactMgr->data_seek(0);
        $game->id('SET',$this->contactMgr->fetch_assoc() ['game_id']);
@@ -103,8 +103,8 @@ class WKL_Game
            );
            
        }
-       $this->setSql($query);
-       $this->contactDB(TRUE);
+       $this->_setSql($query);
+       $this->_contactDB(TRUE);
 
        return true;
    }

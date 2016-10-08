@@ -4,7 +4,7 @@
 	<meta charset="utf-8">
 	<meta name="robots" content="noindex">
 
-	<title>File Game/Models/M_Game.php | Weakest-link</title>
+	<title>File Game/Models/M_Game.php | Weakest-Link</title>
 
 	<link rel="stylesheet" href="resources/style.css?e99947befd7bf673c6b43ff75e9e0f170c88a60e">
 
@@ -115,10 +115,10 @@
 </span><span id="34" class="l"><a href="#34"> 34: </a>    }
 </span><span id="35" class="l"><a href="#35"> 35: </a>    
 </span><span id="36" class="l"><a href="#36"> 36: </a>    <span class="php-comment">/**
-</span></span><span id="37" class="l"><a href="#37"> 37: </a><span class="php-comment">     * sanitized the string and sets it as a query to be executed in the next query calls
+</span></span><span id="37" class="l"><a href="#37"> 37: </a><span class="php-comment">     * sanitizes the string and sets it as a query to be executed in the next query calls
 </span></span><span id="38" class="l"><a href="#38"> 38: </a><span class="php-comment">     * @param string $query
 </span></span><span id="39" class="l"><a href="#39"> 39: </a><span class="php-comment">     */</span>
-</span><span id="40" class="l"><a href="#40"> 40: </a>    <span class="php-keyword1">public</span> <span class="php-keyword1">function</span> setSql(<span class="php-var">$query</span>)
+</span><span id="40" class="l"><a href="#40"> 40: </a>    <span class="php-keyword1">protected</span> <span class="php-keyword1">function</span> _setSql(<span class="php-var">$query</span>)
 </span><span id="41" class="l"><a href="#41"> 41: </a>    {
 </span><span id="42" class="l"><a href="#42"> 42: </a>       <span class="php-var">$this</span>-&gt;sql=<span class="php-var">$query</span>;
 </span><span id="43" class="l"><a href="#43"> 43: </a>    }
@@ -127,7 +127,7 @@
 </span></span><span id="46" class="l"><a href="#46"> 46: </a><span class="php-comment">     * executes the query in the set sql variable
 </span></span><span id="47" class="l"><a href="#47"> 47: </a><span class="php-comment">     * @param bool $multi
 </span></span><span id="48" class="l"><a href="#48"> 48: </a><span class="php-comment">     */</span>
-</span><span id="49" class="l"><a href="#49"> 49: </a>    <span class="php-keyword1">public</span> <span class="php-keyword1">function</span> contactDB(<span class="php-var">$multi</span>=<span class="php-keyword1">FALSE</span>)
+</span><span id="49" class="l"><a href="#49"> 49: </a>    <span class="php-keyword1">protected</span> <span class="php-keyword1">function</span> _contactDB(<span class="php-var">$multi</span>=<span class="php-keyword1">FALSE</span>)
 </span><span id="50" class="l"><a href="#50"> 50: </a>    {
 </span><span id="51" class="l"><a href="#51"> 51: </a>        <span class="php-comment">//$this-&gt;sql=$this-&gt;connection-&gt;escape_string($this-&gt;sql);</span>
 </span><span id="52" class="l"><a href="#52"> 52: </a>
@@ -155,12 +155,12 @@
 </span><span id="74" class="l"><a href="#74"> 74: </a>       <span class="php-comment">//create the game</span>
 </span><span id="75" class="l"><a href="#75"> 75: </a>       <span class="php-var">$query</span>=<span class="php-keyword2">sprintf</span>(<span class="php-quote">&quot;insert into wkl_games(team_tag,player_count,status,difficulty,type) values('%s','%s','%s','%s','%s')&quot;</span>,
 </span><span id="76" class="l"><a href="#76"> 76: </a>                     <span class="php-var">$game</span>-&gt;teamTag,<span class="php-var">$game</span>-&gt;player_count(<span class="php-quote">'GET'</span>),<span class="php-var">$game</span>-&gt;status(<span class="php-quote">'GET'</span>),<span class="php-var">$game</span>-&gt;difficulty(<span class="php-quote">'GET'</span>),<span class="php-var">$game</span>-&gt;type);
-</span><span id="77" class="l"><a href="#77"> 77: </a>       <span class="php-var">$this</span>-&gt;setSql(<span class="php-var">$query</span>);
-</span><span id="78" class="l"><a href="#78"> 78: </a>       <span class="php-var">$this</span>-&gt;contactDB();
+</span><span id="77" class="l"><a href="#77"> 77: </a>       <span class="php-var">$this</span>-&gt;_setSql(<span class="php-var">$query</span>);
+</span><span id="78" class="l"><a href="#78"> 78: </a>       <span class="php-var">$this</span>-&gt;_contactDB();
 </span><span id="79" class="l"><a href="#79"> 79: </a>
 </span><span id="80" class="l"><a href="#80"> 80: </a>       <span class="php-comment">//get the created game id</span>
-</span><span id="81" class="l"><a href="#81"> 81: </a>       <span class="php-var">$this</span>-&gt;setSql(<span class="php-quote">&quot;select game_id from wkl_games order by game_id desc limit 1&quot;</span>);
-</span><span id="82" class="l"><a href="#82"> 82: </a>       <span class="php-var">$this</span>-&gt;contactDB();
+</span><span id="81" class="l"><a href="#81"> 81: </a>       <span class="php-var">$this</span>-&gt;_setSql(<span class="php-quote">&quot;select game_id from wkl_games order by game_id desc limit 1&quot;</span>);
+</span><span id="82" class="l"><a href="#82"> 82: </a>       <span class="php-var">$this</span>-&gt;_contactDB();
 </span><span id="83" class="l"><a href="#83"> 83: </a>       
 </span><span id="84" class="l"><a href="#84"> 84: </a>       <span class="php-var">$this</span>-&gt;contactMgr-&gt;data_seek(<span class="php-num">0</span>);
 </span><span id="85" class="l"><a href="#85"> 85: </a>       <span class="php-var">$game</span>-&gt;id(<span class="php-quote">'SET'</span>,<span class="php-var">$this</span>-&gt;contactMgr-&gt;fetch_assoc() [<span class="php-quote">'game_id'</span>]);
@@ -184,8 +184,8 @@
 </span><span id="103" class="l"><a href="#103">103: </a>           );
 </span><span id="104" class="l"><a href="#104">104: </a>           
 </span><span id="105" class="l"><a href="#105">105: </a>       }
-</span><span id="106" class="l"><a href="#106">106: </a>       <span class="php-var">$this</span>-&gt;setSql(<span class="php-var">$query</span>);
-</span><span id="107" class="l"><a href="#107">107: </a>       <span class="php-var">$this</span>-&gt;contactDB(<span class="php-keyword1">TRUE</span>);
+</span><span id="106" class="l"><a href="#106">106: </a>       <span class="php-var">$this</span>-&gt;_setSql(<span class="php-var">$query</span>);
+</span><span id="107" class="l"><a href="#107">107: </a>       <span class="php-var">$this</span>-&gt;_contactDB(<span class="php-keyword1">TRUE</span>);
 </span><span id="108" class="l"><a href="#108">108: </a>
 </span><span id="109" class="l"><a href="#109">109: </a>       <span class="php-keyword1">return</span> <span class="php-keyword1">true</span>;
 </span><span id="110" class="l"><a href="#110">110: </a>   }
@@ -196,7 +196,7 @@
 </span><span id="115" class="l"><a href="#115">115: </a><span class="xlang">?&gt;</span></span></code></pre>
 
 	<div id="footer">
-		Weakest-link API documentation generated by <a href="http://apigen.org">ApiGen</a>
+		Weakest-Link API documentation generated by <a href="http://apigen.org">ApiGen</a>
 	</div>
 </div>
 </div>
