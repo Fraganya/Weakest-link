@@ -1,0 +1,101 @@
+[Bot]
+Welcome to the weakest link
+[]Any of you could win up to $$$
+[]However if you want to win the money you will have to work as a team
+[] But only one of you will make it to the end as round by round we eliminate the player voted the weakest link
+[] lets meet the team
+
+[] Now the rules
+[] in each round the aim is to answer enough questions correctly to reach your $$$ target within the time limit
+[] There are # of you and the fastest way to reach that target is  to create a chain of # correct asnwers 
+[] if you get a question wrong , you break the chain and lose all the money in the chain
+[] but if you bank before you answer your money in the chain will be saved however you will start a brand new chain
+[] remember at the end of the round only the  money that has been banked can be carried over to the next round
+[] the first round lasts 3 minutes
+
+
+[lets play the weakest link]
+=============================Loop=====================================
+|[Game start]|
+
+[] Out of a possible $$$ you managed to bank a [remark] $$
+#remarks
+{
+	distressing,
+	terrible,
+	deeply distressing,
+	sad
+
+}
+
+[] That money will go to the next round but one of you will [certainly][definately][surely] not
+[pun]
+#pun
+{
+	Who should go back to waiting tables,
+	who was'nt worth the cost of our AJAX calls,
+	who should revisit their books,
+	who isnt worth your time, eject the idiot,
+	one of you has reached the end of their journey,
+	who did a lot to graduate on top of their class
+}
+
+[its time to vote off the weakest link]
+| [vote]|
+
+
+[$name] is the weakest link in this round,he/she 
+{
+	Failed to bank any money,
+	got # questions wrong
+}
+[] its time to reveal who you think is the weakest link
+|[Revealation of votes]|
+
+[optional][why]
+
+[] statistically [statistics]
+#statistics
+{
+   it was [$name] that was the weakest link but its the votes that count,
+   [$name] was the worst player 
+}
+
+[remarks]
+{
+   [$name] you havent answered a single question incorrectly.thank you for your brains and tolerance (..)
+}
+[] [$name] with # votes you are the weakest link goodbye!!
+
+[] [welcome]
+#welcomes
+{
+  astonishingly # have made it to this round but only one will win.
+  # players have managed to make it to this round but only 1 of them can walk away with the money
+}
+========================Restart loop if round!=last roound ===================================
+[] so far you have banked $$$$ out of a possible $$ 
+[] [$namee] and [$name] only the two of you remain
+[] you have 90 seconds
+[] whatever you bank in this round will be doubled and added to your total to make up your grand prize money
+[] so [$$$ * 2] is at stake in this round 
+[] we will start with [$name]
+[last round]
+[Time's up]
+[] you've managed to bank $$ , we will add that to the money banked from the previous rounds
+[] A grand total of $$$ will be taken by only one of you
+[] the final round will determine which one of you gets the prize
+
+[] [$name] and [$name] you have made it to the final round and a grand total of $$$ is up for grabs
+[] but only one you can take it
+
+[]now you will be playing against each other  head to head
+[] you will be asked alternating questions as best of 5
+[] whoever answers the most questions correctly wins- its as simple as that 
+[] if there is a tie we will go for sudden death
+ 
+[][$name] and [$name] for $$$ lets play the weakest link
+[head to head]
+
+[$name] you are the strongest link of this game and you go away with $$$
+[$other name] you go away with nothing.   

@@ -10,6 +10,11 @@ class WKL_Game
      */
     private $connection;
     /**
+    * The remporary container for sorting data to be returned
+    *@var object
+    */
+    private $tempArray;
+    /**
      * holds the sql query to be executed
      * @var  string
      */
@@ -108,8 +113,52 @@ class WKL_Game
 
        return true;
    }
+
+   
+    public function get_init_data($gameId)
+    {
+        //get game difficulty
+        $this->_setSql("select difficulty from wkl_games where game_id={$gameId}");
+        $this->_contactDB();
+
+        $this->contactMgr->data_seek(0);
+        $this->tempArray['difficulty']=$this->contactMgr->fetch_assoc()['difficulty'];
+        
+        //get players 
+        $this->_setSql("select fname,sname,location from wkl_players where game_tag={$gameId}");
+        $this->_contactDB();
+
+        //encode the contestants into an array
+        for($counter=0;$counter<$this->contactMgr->num_rows;$counter++)
+        {
+            $c_player=$this->contactMgr->fetch_array(MYSQLI_ASSOC);
+            $this->tempArray['contestants'][]=array(
+                'fname'=>$c_player['fname'],
+                'sname'=>$c_player['sname'],
+                'location'=>$c_player['location']
+            );
+        }
+
+        return $this->tempArray;
+    }
+
+    public function get_game_players($gameId)
+    {
+        $this->_setSql("select player_id,fname from wkl_players where game_tag={$game_id}");
+        $this->_contactDB();
+
+        //encode the contestants into an array
+        for($counter=0;$counter<$this->contactMgr->num_rows;$counter++)
+        {
+            $c_player=$this->contactMgr->fetch_array(MYSQLI_ASSOC);
+            $this->tempArray[]=array(
+                'id'=>$c_player['player_id'],
+                'fname'=>$c_player['fname']                
+            );
+        }
+
+        return $this->tempArray;
+    }
+   
 }
-
-
-
 ?>

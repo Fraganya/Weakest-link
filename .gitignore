@@ -46,7 +46,7 @@ Network Trash Folder
 Temporary Items
 .apdisk
 
-#jsx module directories
+#jsx module and tool directories
 Game/**/.module-cache
 /nbproject/private/
 nbproject/

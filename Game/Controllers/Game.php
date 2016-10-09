@@ -59,8 +59,12 @@ class Game
     {
         if(valid('id',$_GET))
         {
-           $data['session']='wkl-'.$_GET['id'];
+           $_id=$_GET['id'];
+           $data['session']='wkl-'.$_id;
            $data['title']="Game Play";
+
+           $gameModel=new WKL_Game();
+           $data['gameInfo']=$gameModel->get_init_data($_id);
            Screen::render("Play",$data);
         }
         else{

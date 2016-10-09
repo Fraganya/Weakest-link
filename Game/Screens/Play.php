@@ -37,26 +37,21 @@ echo  $load->css("custom");
         </div>
         <!-- contenstants list -->
         <ul class="list-group contestant-list">
+            <?php foreach($gameInfo['contestants'] as $contestant) : ?>
             <li class="list-group-item">
             <span class="fa fa-user c-avatar"> </span>
-            <span class="contenstant-name">Francis Ganya </span>
-            <span><button class="wk-btn btn fa fa-info pull-right"></button></span>
+            <span class="contenstant-name"><?php echo $contestant['fname'].' '.$contestant['sname']?></span>
+            <span>
+            <!-- this needs fixing -->
+            <button type="button" class="wk-btn btn fa fa-info pull-right"
+               title='<?php echo "Info => {$contestant['fname']}"?>'
+               data-toggle="popover"
+               data-placement="left" 
+               data-content='<?php echo "{$contestant['fname']} {$contestant['sname']} from {$contestant['location']}"; ?>'>
+            </button>
+            </span>
             </li>
-            <li class="list-group-item">
-            <span class="fa fa-user c-avatar"> </span>
-            <span class="contenstant-name">Joshua Nyirenda</span>
-            <span><button class="wk-btn btn fa fa-info pull-right"></button></span>
-            </li>
-            <li class="list-group-item">
-            <span class="fa fa-user c-avatar"> </span>
-            <span class="contenstant-name">Joel Nyirenda</span>
-            <span><button class="wk-btn btn fa fa-info pull-right"></button></span>
-            </li> 
-            <li class="list-group-item">
-            <span class="fa fa-user c-avatar"> </span>
-            <span class="contenstant-name">Frank Lameck</span>
-            <span><button class="wk-btn btn fa fa-info pull-right"></button></span>
-            </li> 
+           <?php endforeach; ?>
         </ul><!-- end of contenstants list -->   
     </div><!-- end of contenstants panel -->
     <p class="well well-sm lead slogan">For the love of the brainy</p>
@@ -80,7 +75,7 @@ echo  $load->css("custom");
             <div class="panel-body">
               <dl >
               <dt >Difficulty</dt>
-              <dd class="well well-sm well-header">Medium</dd>
+              <dd class="well well-sm well-header"><?php echo $gameInfo['difficulty']; ?></dd>
               <dt >Rounds played</dt>
               <dd class="well well-sm well-header">0</dd>
              </dl>
@@ -123,8 +118,10 @@ $load->file(SCREENSPATH.'Screen-ins/Advanced.php',array('load'=>$load));
   |                       load javascript files
   ------------------------------------------------------------------------------*/
   $load->file(SCREENSPATH.'Common/Scripts.php',array('load'=>$load));
+  echo $load->js("play");
   $load->file(SCREENSPATH.'Common/ReactDependency.php',array('load'=>$load));
   echo $load->js("Components/History");
+  
 ?>
 </body>
 </html>
