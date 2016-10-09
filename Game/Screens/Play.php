@@ -42,7 +42,6 @@ echo  $load->css("custom");
             <span class="fa fa-user c-avatar"> </span>
             <span class="contenstant-name"><?php echo $contestant['fname'].' '.$contestant['sname']?></span>
             <span>
-            <!-- this needs fixing -->
             <button type="button" class="wk-btn btn fa fa-info pull-right"
                title='<?php echo "Info => {$contestant['fname']}"?>'
                data-toggle="popover"
