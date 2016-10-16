@@ -1,5 +1,4 @@
 <?php
-define ("DATAPATH","../Data/");
 /**
  * The base class from which all static game models inherit from
  */

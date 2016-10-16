@@ -59,7 +59,11 @@ class Game
     {
         if(valid('id',$_GET))
         {
+           session_start();
            $_id=$_GET['id'];
+
+           //server the game id in session for global access
+           $_SESSION['id']=$_id;
            $data['session']='wkl-'.$_id;
            $data['title']="Game Play";
 
@@ -73,6 +77,15 @@ class Game
     
     }
     
+    public function getPlayData()
+    {
+        session_start();
+        $_id=$_SESSION['id'];
+        $gameModel=new WKL_Game();
+        $info=$gameModel->get_game_players($_id);
+        $info['game_id']=$_id;
+        Response::respondWithJSON($info,null);
+    }
     /**
      * load the game contributions pages
      */

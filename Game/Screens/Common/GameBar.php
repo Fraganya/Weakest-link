@@ -15,7 +15,7 @@
 <div class="collapse navbar-collapse game-bar">
   <ul class="nav navbar-nav">
     <li class=""><a href=".?controller=Game&method=scores"><span class="fa fa-asterisk"></span> Scores</a></li>
-    <li><a href=".?controller=Game&method=contributions"><span class="fa fa-cube"></span> Contributions</a></li>
+    <li><a href=".?controller=Contributions"><span class="fa fa-cube"></span> Contributions</a></li>
   </ul>
   <ul class="nav navbar-nav navbar-right">
   <li class="dropdown"> 

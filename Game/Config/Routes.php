@@ -9,7 +9,10 @@
 */
 
 $routes['Setup']=array("index","installation","bug");
-$routes['Game']=array("index","register","play","contributions","scores");
-
-
+$routes['Game']=array("index","register","play","getPlayData","contributions","scores");
+$routes['Contributions']=array("index","getContributors","getTopContributors","updateContributor","addQuestion","addIdea");
+$routes['About']=array("getAboutInfo","getAboutInfo_about","getCreditInfo","updateInfo");
+$routes['Acknowledgements']=array("getAcknowledgements","addAcknowledgement","updateAcknowldgement");
+$routes['Guides']=array("index","getGuides","addGuide","removeGuide","updateGuide");
+$routes['Modifications']=array("index","getMods","addMod","removeMod","updateMod","");
 ?>

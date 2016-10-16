@@ -164,11 +164,15 @@ ul.money-chain li ,.bank
     padding:8px;
     color:#fff;
     margin:1px;
+
+    &.active-money{
+         background-color:darken(@money-item,25%);
+    }
 }
 .bank 
 {
     border-radius:0px;
-    background-color:darken(@money-item,5%);
+    background-color:darken(@money-item,10%);
 }
 .timer
 {
@@ -185,11 +189,16 @@ ul.contestant-bar li
 {
     padding:10px;
     border:1px solid darken(@base-bg,30%);
+    margin-left:3px;
+    margin-right:3px;
     margin-bottom:2px;
 }
 ul.contestant-bar li.active
 {
     background-color:@online;
+}
+.response-btns button{
+    .marg-1;
 }
 /*helpers */
 .marg-1
@@ -257,4 +266,8 @@ ul.contestant-bar li.active
 @keyframes spin {
   0% { transform: rotate(0deg); }
   100% { transform: rotate(360deg); }
+}
+.full-width{
+    width:90%;
+    height:90%;
 }

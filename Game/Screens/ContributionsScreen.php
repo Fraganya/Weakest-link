@@ -38,22 +38,14 @@ echo  $load->icon('favicon');
     </div>
     
     <ul class="list-group">
+    <?php if($top_contributors):?>
+    <?php foreach($top_contributors as $contributor) : ?>
         <li class="list-group-item">
-            <span class="badge">35</span>
-            Francis Ganya
+            <span class="badge"><?php echo $contributor['count'] ?></span>
+            <?php echo "{$contributor['fname']} {$contributor['sname']}"; ?>
         </li>
-        <li class="list-group-item">
-            <span class="badge">10</span>
-            Clara Ganya
-        </li>
-        <li class="list-group-item">
-            <span class="badge">5</span>
-            Joshua Nyirenda
-        </li>
-        <li class="list-group-item">
-            <span class="badge">5</span>
-            Joel Nyirenda
-        </li>
+    <?php endforeach; ?>
+    <?php endif;?>
     </ul>     
 </div>
 </section>
@@ -66,8 +58,8 @@ echo  $load->icon('favicon');
   ------------------------------------------------------------------------------*/
   $load->file(SCREENSPATH.'Common/Scripts.php',array('load'=>$load));
   $load->file(SCREENSPATH.'Common/ReactDependency.php',array('load'=>$load));
-  echo $load->js("help");
-  echo $load->js("contributions");
+  echo $load->js("components/help");
+  echo $load->js("components/contributions");
 ?>
 </body>
 </html>

@@ -144,14 +144,14 @@ class WKL_Game
 
     public function get_game_players($gameId)
     {
-        $this->_setSql("select player_id,fname from wkl_players where game_tag={$game_id}");
+        $this->_setSql("select player_id,fname from wkl_players where game_tag={$gameId}");
         $this->_contactDB();
 
         //encode the contestants into an array
         for($counter=0;$counter<$this->contactMgr->num_rows;$counter++)
         {
             $c_player=$this->contactMgr->fetch_array(MYSQLI_ASSOC);
-            $this->tempArray[]=array(
+            $this->tempArray['players'][]=array(
                 'id'=>$c_player['player_id'],
                 'fname'=>$c_player['fname']                
             );

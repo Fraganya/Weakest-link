@@ -127,9 +127,13 @@ ul.money-chain li,
   color: #fff;
   margin: 1px;
 }
+ul.money-chain li.active-money,
+.bank.active-money {
+  background-color: #005880;
+}
 .bank {
   border-radius: 0px;
-  background-color: #009ee6;
+  background-color: #008dcc;
 }
 .timer {
   background-color: #00B0FF;
@@ -140,9 +144,12 @@ ul.money-chain li,
   color: #fff;
   margin: 1px;
   border-radius: 0px;
-  background-color: #009ee6;
+  background-color: #008dcc;
   padding: 10px;
   font-size: 120%;
+}
+.timer.active-money {
+  background-color: #005880;
 }
 ul.contestant-bar {
   padding: 2px;
@@ -151,10 +158,15 @@ ul.contestant-bar {
 ul.contestant-bar li {
   padding: 10px;
   border: 1px solid #54b0f3;
+  margin-left: 3px;
+  margin-right: 3px;
   margin-bottom: 2px;
 }
 ul.contestant-bar li.active {
   background-color: #00E676;
+}
+.response-btns button {
+  margin: 5px;
 }
 /*helpers */
 .marg-1 {
@@ -212,4 +224,8 @@ ul.contestant-bar li.active {
   100% {
     transform: rotate(360deg);
   }
+}
+.full-width {
+  width: 90%;
+  height: 90%;
 }

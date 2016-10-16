@@ -28,29 +28,27 @@ var SimplePanel=React.createClass({displayName: "SimplePanel",
 | setupGuides panel list component
 ---------------------------------------------------------------------*/
 var SetupGuides=React.createClass({displayName: "SetupGuides",
+    getDefaultProps:function()
+    {
+        return {infoURL:"./?controller=Guides&method=getGuides"}
+    },
     getInitialState:function()
     {
         return {guides:[]};
     },
     componentDidMount:function()
     {
-        var guidesArr=this.state.guides;
-        var ParentObj=this;
-        $.post("./game/async/db.php",
-              {
-                  cat:'Guides',
-                  cmd:'get-guides',
-                  count:4
-              },function(data,status){
+        $.post(this.props.infoURL,{count:3},function(data,status){
+                 var guidesArr=[];
                   if(data!='false')
                   {
                       var receivedGuides=JSON.parse(data);
                       receivedGuides.map(function(guide,i){
                           guidesArr.push({'title':guide.g_name,'info':guide.content});
                       });
-                      ParentObj.setState({guides:guidesArr});
+                      this.setState({guides:guidesArr});
                    }
-              });
+              }.bind(this));
         
     },
     render:function()
@@ -71,24 +69,23 @@ var SetupGuides=React.createClass({displayName: "SetupGuides",
 | what's this information component
 ---------------------------------------------------------------------*/
 var AboutTheWK=React.createClass({displayName: "AboutTheWK",
+    getDefaultProps:function()
+    {
+        return {infoURL:"./?controller=About&method=getAboutInfo"}
+    },
     getInitialState:function()
     {
         return {about:{}};
     },
     componentDidMount:function()
     {
-        var ParentObj=this;
-        $.post("./game/async/db.php",
-              {
-                  cat:'About',
-                  cmd:'get-about-info-only'
-              },function(data,status){
+        $.post(this.props.infoURL, {},function(data,status){
                   if(data!='false')
                   {
                       var aboutInfo=JSON.parse(data);
-                      ParentObj.setState({about:aboutInfo});
+                      this.setState({about:aboutInfo});
                   }
-              });
+              }.bind(this));
     },
     render:function()
     {
@@ -104,24 +101,23 @@ var AboutTheWK=React.createClass({displayName: "AboutTheWK",
 | about  information component
 ---------------------------------------------------------------------*/
 var AboutGame=React.createClass({displayName: "AboutGame",
+    getDefaultProps:function()
+    {
+        return {infoURL:"./?controller=About&method=getAboutInfo_about"}
+    },
     getInitialState:function()
     {
         return {about:{}};
     },
     componentDidMount:function()
     {
-        var ParentObj=this;
-        $.post("./game/async/db.php",
-              {
-                  cat:'About',
-                  cmd:'get-about-info-for-about-modal'
-              },function(data,status){
+        $.post(this.props.infoURL,{},function(data,status){
                   if(data!='false')
                   {
                       var aboutInfo=JSON.parse(data);
-                      ParentObj.setState({about:aboutInfo});
+                      this.setState({about:aboutInfo});
                   }
-              });
+              }.bind(this));
     },
     render:function()
     {
@@ -139,24 +135,23 @@ var AboutGame=React.createClass({displayName: "AboutGame",
 | Developer's  information component
 ---------------------------------------------------------------------*/
 var DeveloperBox=React.createClass({displayName: "DeveloperBox",
+    getDefaultProps:function()
+    {
+        return {infoURL:"./?controller=About&method=getCreditInfo"}
+    },
     getInitialState:function()
     {
         return {about:{}};
     },
     componentDidMount:function()
     {
-        var ParentObj=this;
-        $.post("./game/async/db.php",
-              {
-                  cat:'About',
-                  cmd:'get-about-info-for-credit-modal'
-              },function(data,status){
+        $.post(this.props.infoURL,{},function(data,status){
                   if(data!='false')
                   {
                       var aboutInfo=JSON.parse(data);
-                      ParentObj.setState({about:aboutInfo});
+                      this.setState({about:aboutInfo});
                   }
-              });
+              }.bind(this));
     },
     render:function()
     {
@@ -180,28 +175,27 @@ var DeveloperBox=React.createClass({displayName: "DeveloperBox",
 | Acknowledgement list
 ---------------------------------------------------------------------*/
 var AcknowledgementList=React.createClass({displayName: "AcknowledgementList",
+    getDefaultProps:function()
+    {
+        return {infoURL:"./?controller=Acknowledgements&method=getAcknowledgements"}
+    },
     getInitialState:function()
     {
         return {projects:[]};
     },
     componentDidMount:function()
     {
-        var proArr=this.state.projects;
-        var ParentObj=this;
-        $.post("./game/async/db.php",
-              {
-                  cat:'Acknowledgements',
-                  cmd:'get-acknowledgements'
-              },function(data,status){
+        $.post(this.props.infoURL,{},function(data,status){
+                 var proArr=[];
                   if(data!='false')
                   {
                       var list=JSON.parse(data);
                       list.map(function(project){
                           proArr.push(project);
                       });
-                      ParentObj.setState({projects:proArr});
+                      this.setState({projects:proArr});
                   }
-              });
+              }.bind(this));
     },
     render:function()
     {
@@ -219,29 +213,28 @@ var AcknowledgementList=React.createClass({displayName: "AcknowledgementList",
 | Acknowledgement list
 ---------------------------------------------------------------------*/
 var ModificationsList=React.createClass({displayName: "ModificationsList",
+    getDefaultProps:function()
+    {
+        return {infoURL:"./?controller=Modifications&method=getMods"}
+    },
     getInitialState:function()
     {
         return {mods:[]};
     },
     componentDidMount:function()
     {
-        var modsArr=this.state.mods;
-        var ParentObj=this;
-        $.post("./game/async/db.php",
-              {
-                  cat:'Modifications',
-                  cmd:'get-modifications'
-              },function(data,status){
+        $.post(this.props.infoURL,{},function(data,status){
                   if(data!='false')
                   {
+                      var modsArr=[];
                       var list=JSON.parse(data);
                       
                       list.map(function(modification){
                           modsArr.push(modification);
                       });
-                      ParentObj.setState({mods:modsArr});
+                      this.setState({mods:modsArr});
                   }
-              });
+              }.bind(this));
     },
     render:function()
     {

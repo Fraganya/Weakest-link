@@ -47,13 +47,13 @@ componentDidUpdate:function()
     // check if the state is registration
     if(this.state.step=='register-game' && this.state.status!='registered')
     {
-        players=  this.state.players,
-        parentObj=this;
+        var players=this.state.players;
+        var gameDifficulty=this.state.gameDifficulty;
         console.log("The game is registering - sending update");
         $.post('.?controller=Game&method=register',
              {
                  players,
-                 difficulty:parentObj.state.gameDifficulty,
+                 difficulty:gameDifficulty,
                  typeof:'offline'
              }
              ,
@@ -61,14 +61,14 @@ componentDidUpdate:function()
                 if(data!='false')
                 {
                     var gameObj=JSON.parse(data);
-                    parentObj.setState({game_id:gameObj.game_id,status:'registered',});
+                    this.setState({game_id:gameObj.game_id,status:'registered',});
                     console.log("registerd successfuly");
                 }
                 else{
                     console.log(status+'=='+data);
                     console.log('something wrong happend');
                 }
-            })
+            }.bind(this))
     }
 },
 /**
@@ -76,13 +76,19 @@ componentDidUpdate:function()
  */
 onStepInit:function()
 {
-    this.setState({playerCount:this.refs.playerNum.value});
-    this.setState({gameDifficulty:this.refs.difficulty.value});
-    this.setState({step:'get-names',status:'registering'});
-    var obj=this;
-    setTimeout(function() {
-        obj.buildFields()
-    },5);
+    
+    // set a promise to get the and set the number of players before building input fields
+    var prepForBuild=new Promise(function(resolve){
+        this.setState({playerCount:this.refs.playerNum.value});
+        this.setState({gameDifficulty:this.refs.difficulty.value});
+        this.setState({step:'get-names',status:'registering'});
+        resolve();
+    }.bind(this));
+   
+   // build the fields after prep
+   prepForBuild.then(function(){
+       this.buildFields();
+   }.bind(this))
 },
 /**
  * build the player fields based on the number of players
@@ -188,7 +194,6 @@ getNames:function()
 */
 registration:function()
 {
-    var parentObj=this;
     var aproUpdate=null;
     if(this.state.status=='registering')
     {
@@ -203,8 +208,8 @@ registration:function()
     }
     else{
         aproUpdate=function(){ 
-            return (<a className="btn btn-link wk-btn-link" href={'.?controller=Game&method=play&id='+parentObj.state.game_id}>Play</a>)
-        }
+            return (<a className="btn btn-link wk-btn-link" href={'.?controller=Game&method=play&id='+this.state.game_id}>Play</a>)
+        }.bind(this);
         
     }
     return(

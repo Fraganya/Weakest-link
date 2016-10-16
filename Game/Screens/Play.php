@@ -62,8 +62,8 @@ echo  $load->css("custom");
       <p class="well well-sm">Welcome contenstants </p>
      </div>
      <div class="host-interaction-btns">    
-        <button type="button" class="btn btn-large  wk-btn">Interaction 1</button>   
-         <button type="button" class="btn btn-large  wk-btn">Interaction 2</button>   
+        <button type="button" id="int-btn-1" class="btn btn-large  wk-btn">start game</button>   
+        <button type="button" id="int-btn-2" class="btn btn-large  wk-btn">Interaction 2</button>   
      </div>
    </section><!--end of game messages section -->
    <!--game info section -->
@@ -107,9 +107,10 @@ echo  $load->css("custom");
     </div>
 </div>
 <div id="game-events"></div>
+<div id="game-controller"></div>
 <?php  
-$load->file(SCREENSPATH.'Screen-ins/GamePlay.php',array('load'=>$load)); 
-$load->file(SCREENSPATH.'Screen-ins/Statistics.php',array('load'=>$load)); 
+//$load->file(SCREENSPATH.'Screen-ins/GamePlay.php',array('load'=>$load)); 
+//$load->file(SCREENSPATH.'Screen-ins/Statistics.php',array('load'=>$load)); 
 $load->file(SCREENSPATH.'Screen-ins/Advanced.php',array('load'=>$load)); 
 ?>
 <?php
@@ -117,8 +118,10 @@ $load->file(SCREENSPATH.'Screen-ins/Advanced.php',array('load'=>$load));
   |                       load javascript files
   ------------------------------------------------------------------------------*/
   $load->file(SCREENSPATH.'Common/Scripts.php',array('load'=>$load));
-  echo $load->js("play");
   $load->file(SCREENSPATH.'Common/ReactDependency.php',array('load'=>$load));
+  echo $load->js("play");
+  echo $load->js("core");
+  echo $load->js("Components/PlayComponents");
   echo $load->js("Components/History");
   
 ?>

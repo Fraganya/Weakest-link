@@ -19,16 +19,18 @@ class ContributorMgr extends WK_MODEL
     * retrieves contributors info
     * @return	array
     **/
-    public function getContributors()
+    public function getContributors($table='contributors',$top=FALSE)
     {
-        $this->sql="select * from contributors";
+        $this->sql="select * from {$table}";
         $this->contactDB();
         while($row=$this->contactMgr->fetchArray(SQLITE3_ASSOC))
         {
-            $thisContributor['fname']=$row['c_fname'];
-            $thisContributor['sname']=$row['c_sname'];
-            $thisContributor['count']=$row['count'];
-
+            $thisContributor['fname']=$row['fname'];
+            $thisContributor['sname']=$row['sname'];
+            if($top)
+            {
+                $thisContributor['count']=$row['count']; 
+            }
             $this->tempArray[]=$thisContributor;
         }
         return $this->tempArray;
@@ -39,11 +41,22 @@ class ContributorMgr extends WK_MODEL
     * adds contributor
     * @return	boolean
     **/
-    public function addContributor($fname,$sname)
+    public function addContributor($fname,$sname,$sync=FALSE)
     {
         $this->sql=sprintf("insert into contributors(c_fname,c_sname) values('%s','%s')",$fname,$sname);
         $this->contactDB();
-        return true;
+
+        if(!$sync)
+        {
+            return true;
+        }
+
+        $this->sql=("select id from contributors ORDER by id DESC LIMIT 1");
+        $this->contactDB();
+
+        // return the just inserted c_id
+        $id=$this->contactMgr->fetchArray(SQLITE3_ASSOC)['id'];
+        return $id;
     }
 
     /**
@@ -58,6 +71,24 @@ class ContributorMgr extends WK_MODEL
         $this->contactDB(false);
         return true;
     }
+
+    public function addQuestion($question,$answer,$c_id)
+    {
+        $this->sql=sprintf("insert into contributed_questions(question,answer,by) values('%s','%s','%s')",
+                     $question,$answer,$c_id);
+        $this->contactDB(false);
+        return true;
+    }
+
+    public function addIdea($idea,$c_id)
+    {
+        $this->sql=sprintf("insert into ideas(about,added,by) values('%s',DATE(),'%s')",
+                     $idea,$c_id);
+        $this->contactDB(false);
+        return true;
+    }
+
+    
 }
 
 ?>
