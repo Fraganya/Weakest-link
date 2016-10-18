@@ -1,8 +1,8 @@
  <?php
  /*-----------------------------------------------------------------------------
-  |                       load global stylesheets
+  |                       load Admin global stylesheets
   ------------------------------------------------------------------------------*/
-  echo $load->css("custom-bs");
-  echo $load->css("font-awesome.min");
-  echo $load->css("animate");
+ echo  $load->css("datepicker3");
+ echo  $load->css("bootstrap-table");
+ echo  $load->css("styles");
 ?>

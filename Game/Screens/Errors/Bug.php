@@ -40,7 +40,7 @@ echo  $load->css("custom")
   ------------------------------------------------------------------------------*/
   $load->file(SCREENSPATH.'Common/Scripts.php',array('load'=>$load));
   $load->file(SCREENSPATH.'Common/ReactDependency.php',array('load'=>$load));
-  echo $load->js("bug");
+  echo $load->js("Components/bug");
 ?>
 </body>
 </html>

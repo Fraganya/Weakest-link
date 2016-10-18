@@ -1,0 +1,26 @@
+[
+    {
+        "id": 0,
+        "GameTag": "wkl-22",
+        "Players": "5",
+        "Money":154000
+    },
+    {
+        "id": 2,
+        "GameTag": "wkl-23",
+        "Players": "6",
+        "Money":164000
+    },
+    {
+         "id": 3,
+        "GameTag": "wkl-33",
+        "Players": "4",
+        "Money":15000
+    },
+    {
+        "id": 4,
+        "GameTag": "wkl-7",
+        "Players": "9",
+        "Money":23000
+    }
+]

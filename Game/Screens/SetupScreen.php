@@ -14,11 +14,10 @@ $load=new Asset();
   |                       load stylesheets
   ------------------------------------------------------------------------------*/
   $load->file(SCREENSPATH.'Common/Styles.php',array('load'=>$load));
-  echo  $load->css("font-awesome");
   echo  $load->css("custom");
   echo  $load->icon('favicon');
   ?>
-  <title><?php echo $title; ?></title>
+  <title><?php echo ucfirst($title); ?></title>
 </head>
 <body>
 <?php $load->file(SCREENSPATH."Common/GameBar.php",null); ?>
@@ -79,7 +78,6 @@ $load=new Asset();
   ------------------------------------------------------------------------------*/
   $load->file(SCREENSPATH.'Common/Scripts.php',array('load'=>$load));
   $load->file(SCREENSPATH.'Common/ReactDependency.php',array('load'=>$load));
-  echo $load->js("setupUI");
   echo $load->js("Components/help");
   echo  $load->js("Components/GameSetup");
 ?>

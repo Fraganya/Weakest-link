@@ -13,7 +13,6 @@ $load=new Asset();
 |                       load stylesheets
 ------------------------------------------------------------------------------*/
 $load->file(SCREENSPATH.'Common/Styles.php',array('load'=>$load));
-echo  $load->css("font-awesome");
 echo  $load->css("custom");
  echo  $load->icon('favicon');
 ?>

@@ -14,7 +14,6 @@ $load=new Asset();
 |                       load stylesheets
 ------------------------------------------------------------------------------*/
 $load->file(SCREENSPATH.'Common/Styles.php',array('load'=>$load));
-echo  $load->css("font-awesome");
 echo  $load->css("custom");
 echo  $load->icon('favicon');
 ?>
@@ -106,7 +105,7 @@ echo  $load->icon('favicon');
   ------------------------------------------------------------------------------*/
   $load->file(SCREENSPATH.'Common/Scripts.php',array('load'=>$load));
   $load->file(SCREENSPATH.'Common/ReactDependency.php',array('load'=>$load));
-  echo $load->js("help");
+  echo $load->js("Components/help");
 ?>
 </body>
 </html>

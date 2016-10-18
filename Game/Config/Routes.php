@@ -8,6 +8,7 @@
 | its structure is controller => array of available methods
 */
 
+$routes['Admin']=array("index","home");
 $routes['Setup']=array("index","installation","bug");
 $routes['Game']=array("index","register","play","getPlayData","contributions","scores");
 $routes['Contributions']=array("index","getContributors","getTopContributors","updateContributor","addQuestion","addIdea");
