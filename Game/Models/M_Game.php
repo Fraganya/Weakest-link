@@ -1,73 +1,10 @@
 <?php
+
 /**
  * Handles all requests to do with the game registration and play
  */
-class WKL_Game
-{
-    /**
-     * The mysqli object used to connect to the database
-     * @var object
-     */
-    private $connection;
-    /**
-    * The remporary container for sorting data to be returned
-    *@var object
-    */
-    private $tempArray;
-    /**
-     * holds the sql query to be executed
-     * @var  string
-     */
-    private $sql;
-    /**
-     * Holds the result of the recent database query
-     * @var object
-     */
-    public $contactMgr;
-
-    /**
-     * initialises the connection object
-     */
-    public function __construct()
-    {
-        require_once(CONFIGPATH.'Environment.php');
-        $this->connection=new mysqli($host,$username,$key,$db);
-        if($this->connection->connect_error)
-        {
-            die($this->connection->connect_error);
-        }
-    }
-    
-    /**
-     * sanitizes the string and sets it as a query to be executed in the next query calls
-     * @param string $query
-     */
-    protected function _setSql($query)
-    {
-       $this->sql=$query;
-    }
-    
-    /**
-     * executes the query in the set sql variable
-     * @param bool $multi
-     */
-    protected function _contactDB($multi=FALSE)
-    {
-        //$this->sql=$this->connection->escape_string($this->sql);
-
-        if($multi)
-        {
-             $this->contactMgr=$this->connection->multi_query($this->sql);
-        }
-        else{
-              $this->contactMgr=$this->connection->query($this->sql);
-        }
-        if(!$this->contactMgr) 
-        {
-            die($this->connection->error);
-        }
-    }
-    
+class WKL_Game extends M_WKL_BASE
+{   
     /**
      * registers the game in the database 
      * and gets the registered game id to be used during player registration
@@ -114,7 +51,11 @@ class WKL_Game
        return true;
    }
 
-   
+   /**
+    * gets data to initialise game play
+    * @param type $gameId
+    * @return type
+    */
     public function get_init_data($gameId)
     {
         //get game difficulty
@@ -141,7 +82,12 @@ class WKL_Game
 
         return $this->tempArray;
     }
-
+    
+    /**
+     * gets player data
+     * @param type $gameId
+     * @return type
+     */
     public function get_game_players($gameId)
     {
         $this->_setSql("select player_id,fname from wkl_players where game_tag={$gameId}");
@@ -159,6 +105,74 @@ class WKL_Game
 
         return $this->tempArray;
     }
-   
+    
+    /**
+     * gets the number of games played
+     * @return int
+     */
+    public function getCount()
+    {
+        $this->_setSql("select game_id from wkl_games");
+        $this->_contactDB();
+        $count=0;
+        while($row=$this->contactMgr->fetch_array(MYSQLI_ASSOC))
+        {
+              $count++ ;     
+        }
+
+        return $count;
+    }
+    
+    /**
+     * gets the information about top games,score and all games in general
+     * @param type $limit - the number of entries to get
+     * @param type $GET_TIP_TOP - get the highest score
+     * @param type $GAMES_ONLY - get game information only
+     * @return type
+     */
+    public function getTopGames($limit=10,$GET_TIP_TOP=FALSE,$GAMES_ONLY=FALSE)
+    {
+        $query='';
+        if($GAMES_ONLY){
+            $query="select game_id,money,player_count from wkl_games";
+        }
+        else{
+             $query=sprintf("select game_id,money,player_count from wkl_games order by money desc limit %d",
+                        $limit);
+        }
+       
+
+        $this->_setSql($query);
+        $this->_contactDB();
+        if($GET_TIP_TOP)
+        {
+            $money=$this->contactMgr->fetch_array(MYSQLI_ASSOC)['money'];
+            return $money;    
+        
+        }
+        
+        while($row=$this->contactMgr->fetch_array(MYSQLI_ASSOC))
+        {
+              $this->tempArray[]=array('tag'=>"wkl-{$row['game_id']}",
+                                        'players'=>$row['player_count'],
+                                        'money'=>$row['money']); 
+        }
+        
+        return $this->tempArray;
+    }
+    
+    /**
+     * gets the lowest score of the played games
+     * @return int
+     */
+    public function getLowScore()
+   {
+        $this->_setSql("select money from wkl_games order by money asc limit 1");
+        $this->_contactDB();
+       
+        $money=$this->contactMgr->fetch_array(MYSQLI_ASSOC)['money'];
+        return $money;    
+        
+   }
 }
 ?>

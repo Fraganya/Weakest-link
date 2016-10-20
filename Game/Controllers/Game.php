@@ -5,22 +5,27 @@
 $load=new Asset();
 $load->file(APIPATH.'Session.php');
 $load->file(APIPATH.'Response.php');
+$load->file(MODELSPATH.'M_WKL_BASE.php');
 $load->file(MODELSPATH.'M_GAME.php');
 /**
  * Main Game controller
  */
 class Game
 {
-    private $load;
+    /**
+     * holds the game controller
+     * @var object
+     */
+    private $gameModel;
     /**
      * initialise controller variables here 
      */
     public function __construct()
     {
-   
+        $this->gameModel=new WKL_Game();
     }
     /**
-     * This loads [to be specified]
+     * This loads []
      */
     public function index()
     {
@@ -35,13 +40,12 @@ class Game
     {   
        if(valid(array('players','difficulty','typeof'),$_POST))
        {
-           $gameModel=new WKL_Game();
            extract($_POST,EXTR_PREFIX_ALL,'Ex');
            $thisGame=new Session($Ex_typeof,$Ex_difficulty);
            $thisGame->player_count('SET',count($Ex_players)); 
-           if($gameModel->createGame($thisGame))
+           if($this->gameModel->createGame($thisGame))
            {
-               if($gameModel->register_players($thisGame->id('GET'),$Ex_players))
+               if($this->gameModel->register_players($thisGame->id('GET'),$Ex_players))
                {
                    $status=true;
                    return Response::respondWithJSON(array('game_id'=>$thisGame->id('GET')),null);
@@ -67,8 +71,7 @@ class Game
            $data['session']='wkl-'.$_id;
            $data['title']="Game Play";
 
-           $gameModel=new WKL_Game();
-           $data['gameInfo']=$gameModel->get_init_data($_id);
+           $data['gameInfo']=$this->gameModel->get_init_data($_id);
            Screen::render("Play",$data);
         }
         else{
@@ -76,25 +79,47 @@ class Game
         }
     
     }
-    
+    /**
+     * gets the game data to initialise game components when game is in init state
+     * @return object
+     */
     public function getPlayData()
     {
         session_start();
         $_id=$_SESSION['id'];
-        $gameModel=new WKL_Game();
-        $info=$gameModel->get_game_players($_id);
+        $info=$this->gameModel->get_game_players($_id);
         $info['game_id']=$_id;
-        Response::respondWithJSON($info,null);
-    }
-    /**
-     * load the game contributions pages
-     */
-    public function contributions()
-    {
-        $data['title']="Contributions";
-        Screen::render("Contributions",$data);
+        return Response::respondWithJSON($info,null);
     }
     
+    /**
+     * returns the number of games played on this server
+     * @return int
+     */
+    public function count()
+    {
+        $count=$this->gameModel->getCount();
+        return Response::respondWithJSON(array('count'=>$count),"games_played");
+    }
+    
+    /**
+     * returns the games with the top scores
+     * @return object
+     */
+    public function topGames()
+    {
+        $games=$this->gameModel->getTopGames();
+        return Response::respondWithJSON(array($games),"game");
+    }
+    
+    /**
+     * returns information about all the games played on this server
+     * @return type object
+     */
+    public function get_all()
+    {
+        return Response::respondWithJSON($this->gameModel->getTopGames(NULL,NULL,TRUE),"games");
+    }
     /**
      * loads the game scores page
      */
@@ -102,6 +127,28 @@ class Game
     {
         $data['title']="Scores";
         Screen::render("Scores",$data);
+    }
+    
+    /**
+     * gets the top score
+     * @return int
+     */
+    public function topScore()
+    {
+        $score=$this->gameModel->getTopGames(1,TRUE);
+        if(!$score) {$score=0;}
+        return Response::respondWithJSON(array('score'=>$score),"score");
+    }
+    
+    /**
+     * returns the lowest score
+     * @return int
+     */
+     public function lowScore()
+    {
+        $score=$this->gameModel->getLowScore();
+        if(!$score) {$score=0;}
+        Response::respondWithJSON(array('score'=>$score),"score");
     }
 }
 

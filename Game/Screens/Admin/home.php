@@ -17,8 +17,14 @@ $load=new Asset();
 echo  $load->css("bootstrap.min");
 $load->file(SCREENSPATH.'Common/AdminStyles.php',array('load'=>$load));
 echo  $load->css("font-awesome.min");
+echo  $load->css("animate");
 echo  $load->icon('favicon');
 ?>
+<style>
+.validation-error{
+	border-color:red;
+}
+</style>
 <title><?php echo ucfirst($title); ?></title>
 
 <!--Icons-->
@@ -42,15 +48,7 @@ echo  $load->icon('favicon');
 			<span class="icon-bar"></span>
 		</button>
 		<a class="navbar-brand" href="#"><span>WKL Admin</span></a>
-		<ul class="user-menu">
-			<li class="dropdown pull-right">
-				<a href="#" class="dropdown-toggle" data-toggle="dropdown">
-				<svg class="glyph stroked male-user"><use xlink:href="#stroked-male-user"></use></svg> User <span class="caret"></span></a>
-				<ul class="dropdown-menu" role="menu">
-					<li><a href="#"><svg class="glyph stroked cancel"><use xlink:href="#stroked-cancel"></use></svg> Logout</a></li>
-				</ul>
-			</li>
-		</ul>
+
 	</div>
 					
 </div><!-- /.container-fluid -->
@@ -59,7 +57,7 @@ echo  $load->icon('favicon');
 <div id="sidebar-collapse" class="col-sm-3 col-lg-2 sidebar">
 	<form role="search">
 		<div class="form-group">
-			<input type="text" class="form-control" placeholder="Search">
+			<input type="text" class="form-control" placeholder="Search" disabled>
 		</div>
 	</form>
 	<ul class="nav menu">
@@ -72,9 +70,6 @@ echo  $load->icon('favicon');
 
 		<li role="presentation" class="divider"></li>
 		<li><a href="#about-section" data-toggle="tab"><svg class="glyph stroked folder"><use xlink:href="#stroked-folder"></use></svg>About</a></li>
-		<li role="presentation" class="divider"></li>
-		<li><a href="#admin-section" data-toggle="tab"><svg class="glyph stroked male-user"><use xlink:href="#stroked-male-user"></use></svg>Admins</a></li>
-		<li><a href="#settings-section" data-toggle="tab"><svg class="glyph stroked gear"><use xlink:href="#stroked-gear"></use></svg> Settings</a></li>
 	</ul>
 
 	</div><!--/.sidebar-->
@@ -88,8 +83,6 @@ echo  $load->icon('favicon');
 			<div class='tab-pane fade  ' id="Q-contrib-section"></div>
 			<div class='tab-pane fade ' id="S-contrib-section"></div>
 			<div class='tab-pane fade ' id="about-section"></div>
-			<div class='tab-pane fade ' id="admin-section"></div>
-			<div class='tab-pane fade ' id="settings-section"></div>
 		</div>
 	</div>	<!--/.main-->
 
@@ -104,7 +97,6 @@ echo  $load->icon('favicon');
   echo $load->js("chart.min");
   echo $load->js("chart-data");
   echo $load->js("easypiechart");
-  echo  $load->js("easypiechart-data");
   echo $load->js("bootstrap-datepicker");
   echo $load->js("bootstrap-table");
   echo $load->js("respond.min");

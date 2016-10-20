@@ -27,7 +27,7 @@ $Asset->file(APIPATH."Screen.php");
 /*-----------------------------------------------------------------------------
 |                        Get Controller and action
 -----------------------------------------------------------------------------*/
-$controller=(isset($_GET['controller'])) ? $_GET['controller'] : 'Setup';
+$controller=(isset($_GET['controller'])) ? ucfirst($_GET['controller']) : 'Setup';
 $method=(isset($_GET['method'])) ? $_GET['method'] : 'index';
 
 /*-----------------------------------------------------------------------------

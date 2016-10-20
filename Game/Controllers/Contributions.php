@@ -6,10 +6,15 @@ $load=new Asset();
 $load->file(APIPATH.'Response.php');
 $load->file(MODELSPATH.'M_Contributors.php');
 /**
- * Main Game controller
+ * Contributions class
+ * Handles requests to do with contributions - questions and  suggestions
  */
 class Contributions
 {
+    /**
+     * ref of the contribution model
+     * @var object
+     */
     private $contribMgr;
     /**
      * initialise controller variables here 
@@ -19,7 +24,7 @@ class Contributions
         $this->contribMgr=new ContributorMgr();
     }
     /**
-     * This loads [to be specified]
+     * This loads the contributions page
      */
     public function index()
     {
@@ -27,18 +32,42 @@ class Contributions
         $data['top_contributors']=$this->contribMgr->getContributors("top_contributors",true);
         Screen::render("ContributionsScreen",$data);
     }
-
-    public function getTopContributors()
+    /**
+     * gets the number of contributions made to the game
+     * adds both suggestions and questions submitted
+     * @return int
+     */
+    public function count()
+    {
+        $Qcount=$this->contribMgr->getContributedQuestions(TRUE);
+        //$Icount=$this->contribMgr->getSuggestions(TRUE);
+        return  Response::respondWithJSON(array('count'=>$Qcount),"data");
+    } 
+    /**
+     * gets a list of top contributors from the top_contributors 
+     * bases selection on contribution count
+     * @return object
+     */
+    public function top_contributors()
     {
         $contribs=$this->contribMgr->getContributors("top_contributors",true);
         return  Response::respondWithJSON($contribs,"Contributors");
     }
-    public function getContributors()
+    
+    /**
+     * gets contributors to the game
+     * @return object
+     */
+    public function contributors()
     {
         $contribs=$this->contribMgr->getContributors();
-        Response::respondWithJSON($contribs,"Contributors");    
+        return Response::respondWithJSON($contribs,"Contributors");    
     }
-
+    
+    /**
+     * addss a question to the contributed_questions table
+     * @return bool
+     */
     public function addQuestion()
     {
         if(valid(array('fname',"sname","question","answer"),$_POST))
@@ -49,7 +78,50 @@ class Contributions
         }
         return (Response::passive(false));
     }
-
+    
+    /**
+     * removes a pending question in the contributed_questions table that has been added to the main DB
+     * @return bool
+     */
+    public function removeQuestion()
+    {
+        if(valid('id',$_POST))
+        {
+            return Response::passive($this->contribMgr->removeQuestion($_POST['id']));
+        }
+        return Response::passive('false');
+    }
+    /**
+     * gets the user contributed questions
+     * @return object
+     */
+    public function questions()
+    {
+       return Response::respondwithJSON($this->contribMgr->getContributedQuestions(),"questions");
+    }
+    
+    /**
+     * gets a question information
+     * @return [mixed]
+     */
+    public function question()
+    {
+        if(valid('id',$_POST))
+        {
+            extract($_POST,EXTR_PREFIX_ALL,'Ex');
+            $question=$this->contribMgr->getContributedQuestion($Ex_id);
+            if($question)
+            {
+                return Response::respondwithJSON($question,"question");
+            }
+            
+        }
+        return Response::passive(false);
+    }
+    /**
+     * adds a suggestion/idea to the ideas table
+     * @return bool
+     */
     public function addIdea()
     {
         if(valid(array('fname',"sname","suggestion"),$_POST))
@@ -61,6 +133,10 @@ class Contributions
         return (Response::passive(false));
     }
 
+    /**
+     * updates a contributors details in the contributors table
+     * @return bool
+     */
     public function updateContributor()
     {
         if(valid(array('id','contribution_count'),$_POST))
@@ -69,6 +145,14 @@ class Contributions
                 return (Response::passive($contribMgr->updateContributor($Ex_id,$Ex_contribution_count)));
         }
         return (Response::passive(false));
+    }
+    
+    /**
+     * gets all the suggestions in the ideas table
+     */
+    public function suggestions()
+    {
+        Response::respondWithJSON($this->contribMgr->getSuggestions(),"suggestions");
     }
     
 }

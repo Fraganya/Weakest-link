@@ -8,12 +8,17 @@
 | its structure is controller => array of available methods
 */
 
-$routes['Admin']=array("index","home");
+$routes['Admin']=array("index");
 $routes['Setup']=array("index","installation","bug");
-$routes['Game']=array("index","register","play","getPlayData","contributions","scores");
-$routes['Contributions']=array("index","getContributors","getTopContributors","updateContributor","addQuestion","addIdea");
-$routes['About']=array("getAboutInfo","getAboutInfo_about","getCreditInfo","updateInfo");
-$routes['Acknowledgements']=array("getAcknowledgements","addAcknowledgement","updateAcknowldgement");
-$routes['Guides']=array("index","getGuides","addGuide","removeGuide","updateGuide");
-$routes['Modifications']=array("index","getMods","addMod","removeMod","updateMod","");
+$routes['Game']=array("index","register","play","getPlayData","topGames","get_all","scores","topScore","lowScore","count");
+$routes['Questions']=array("all","add","count","getBrainy","brainy_count","getEasy","getMedium");
+$routes['Contributions']=array(
+                            "index","contributors","top_contributors","count",
+                            "questions","question","removeQuestion","suggestions",
+                            "updateContributor","addQuestion","addIdea"
+                            );
+$routes['About']=array("info","summary","credits","update");
+$routes['Acknowledgements']=array("get","add","update");
+$routes['Guides']=array("index","get","all","add","remove","update");
+$routes['Modifications']=array("index","get","add","remove","update","");
 ?>

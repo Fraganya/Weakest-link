@@ -115,11 +115,12 @@ window.onload = function(){
 	window.myLine = new Chart(chart2).Line(lineChartData, {
 		responsive: true
 	});
-	/** 
+
 	var chart2 = document.getElementById("bar-chart").getContext("2d");
 	window.myBar = new Chart(chart2).Bar(barChartData, {
 		responsive : true
 	});
+	/*
 	var chart3 = document.getElementById("doughnut-chart").getContext("2d");
 	window.myDoughnut = new Chart(chart3).Doughnut(doughnutData, {responsive : true
 	});

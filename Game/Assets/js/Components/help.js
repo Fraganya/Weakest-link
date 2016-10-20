@@ -30,7 +30,7 @@ var SimplePanel=React.createClass({displayName: "SimplePanel",
 var SetupGuides=React.createClass({displayName: "SetupGuides",
     getDefaultProps:function()
     {
-        return {infoURL:"./?controller=Guides&method=getGuides"}
+        return {infoURL:"./?controller=Guides&method=get"}
     },
     getInitialState:function()
     {
@@ -42,11 +42,15 @@ var SetupGuides=React.createClass({displayName: "SetupGuides",
                  var guidesArr=[];
                   if(data!='false')
                   {
-                      var receivedGuides=JSON.parse(data);
-                      receivedGuides.map(function(guide,i){
-                          guidesArr.push({'title':guide.g_name,'info':guide.content});
-                      });
-                      this.setState({guides:guidesArr});
+                      try{
+                           var receivedGuides=JSON.parse(data);
+                        receivedGuides.map(function(guide,i){
+                            guidesArr.push({'title':guide.g_name,'info':guide.content});
+                        });
+                        this.setState({guides:guidesArr});
+                      }
+                      catch(e){console.log("No guides")}
+                     
                    }
               }.bind(this));
         
@@ -71,7 +75,7 @@ var SetupGuides=React.createClass({displayName: "SetupGuides",
 var AboutTheWK=React.createClass({displayName: "AboutTheWK",
     getDefaultProps:function()
     {
-        return {infoURL:"./?controller=About&method=getAboutInfo"}
+        return {infoURL:"./?controller=About&method=info"}
     },
     getInitialState:function()
     {
@@ -103,7 +107,7 @@ var AboutTheWK=React.createClass({displayName: "AboutTheWK",
 var AboutGame=React.createClass({displayName: "AboutGame",
     getDefaultProps:function()
     {
-        return {infoURL:"./?controller=About&method=getAboutInfo_about"}
+        return {infoURL:"./?controller=About&method=summary"}
     },
     getInitialState:function()
     {
@@ -137,7 +141,7 @@ var AboutGame=React.createClass({displayName: "AboutGame",
 var DeveloperBox=React.createClass({displayName: "DeveloperBox",
     getDefaultProps:function()
     {
-        return {infoURL:"./?controller=About&method=getCreditInfo"}
+        return {infoURL:"./?controller=About&method=credits"}
     },
     getInitialState:function()
     {
@@ -177,7 +181,7 @@ var DeveloperBox=React.createClass({displayName: "DeveloperBox",
 var AcknowledgementList=React.createClass({displayName: "AcknowledgementList",
     getDefaultProps:function()
     {
-        return {infoURL:"./?controller=Acknowledgements&method=getAcknowledgements"}
+        return {infoURL:"./?controller=Acknowledgements&method=get"}
     },
     getInitialState:function()
     {
@@ -215,7 +219,7 @@ var AcknowledgementList=React.createClass({displayName: "AcknowledgementList",
 var ModificationsList=React.createClass({displayName: "ModificationsList",
     getDefaultProps:function()
     {
-        return {infoURL:"./?controller=Modifications&method=getMods"}
+        return {infoURL:"./?controller=Modifications&method=get"}
     },
     getInitialState:function()
     {

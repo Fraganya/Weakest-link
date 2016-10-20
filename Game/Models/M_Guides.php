@@ -16,9 +16,16 @@ class GuideMgr extends WK_MODEL
     * retrieves guide information
     * @return array
     **/
-    public function getGuides($count)
+    public function getGuides($count=NULL)
     {
-        $this->sql=sprintf("select * from guides limit %s",$count);
+        if(isset($count))
+        {
+             $this->sql=sprintf("select * from guides limit %s",$count);
+        }
+        else{
+            $this->sql="select * from guides ";
+        }
+       
         $this->contactDB();
         while($row=$this->contactMgr->fetchArray(SQLITE3_ASSOC))
         {

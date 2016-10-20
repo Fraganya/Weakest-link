@@ -3,7 +3,7 @@
 <head>
 	<meta charset="utf-8">
 
-	<title>Class Game | Weakest-Link</title>
+	<title>Class Game | Weakest Link API</title>
 
 	<link rel="stylesheet" href="resources/style.css?e99947befd7bf673c6b43ff75e9e0f170c88a60e">
 
@@ -23,19 +23,28 @@
 		<div id="elements">
 			<h3>Classes</h3>
 			<ul>
+				<li><a href="class-About.html">About</a></li>
 				<li><a href="class-AboutMgr.html">AboutMgr</a></li>
 				<li><a href="class-AcknowledgementMgr.html">AcknowledgementMgr</a></li>
+				<li><a href="class-Acknowledgements.html">Acknowledgements</a></li>
+				<li><a href="class-Admin.html">Admin</a></li>
 				<li><a href="class-Asset.html">Asset</a></li>
+				<li><a href="class-Contributions.html">Contributions</a></li>
 				<li><a href="class-ContributorMgr.html">ContributorMgr</a></li>
 				<li class="active"><a href="class-Game.html">Game</a></li>
 				<li><a href="class-GuideMgr.html">GuideMgr</a></li>
+				<li><a href="class-Guides.html">Guides</a></li>
+				<li><a href="class-M_WKL_BASE.html">M_WKL_BASE</a></li>
+				<li><a href="class-Modifications.html">Modifications</a></li>
 				<li><a href="class-ModificationsMgr.html">ModificationsMgr</a></li>
+				<li><a href="class-Questions.html">Questions</a></li>
 				<li><a href="class-Response.html">Response</a></li>
 				<li><a href="class-Screen.html">Screen</a></li>
 				<li><a href="class-Session.html">Session</a></li>
 				<li><a href="class-Setup.html">Setup</a></li>
 				<li><a href="class-WK_MODEL.html">WK_MODEL</a></li>
 				<li><a href="class-WKL_Game.html">WKL_Game</a></li>
+				<li><a href="class-WKL_QuestionMgr.html">WKL_QuestionMgr</a></li>
 			</ul>
 
 
@@ -100,7 +109,7 @@
 		
 		
 
-			<b>Located at</b> <a href="source-class-Game.html#9-89" title="Go to source code">Game/Controllers/Game.php</a>
+			<b>Located at</b> <a href="source-class-Game.html#10-153" title="Go to source code">Game/Controllers/Game.php</a>
 		<br>
 	</div>
 
@@ -120,7 +129,7 @@
 
 		<td class="name"><div>
 		<a class="anchor" href="#___construct">#</a>
-		<code><a href="source-class-Game.html#15-21" title="Go to source code">__construct</a>( )</code>
+		<code><a href="source-class-Game.html#20-26" title="Go to source code">__construct</a>( )</code>
 
 		<div class="description short">
 			<p>initialise controller variables here</p>
@@ -150,14 +159,14 @@
 
 		<td class="name"><div>
 		<a class="anchor" href="#_index">#</a>
-		<code><a href="source-class-Game.html#22-28" title="Go to source code">index</a>( )</code>
+		<code><a href="source-class-Game.html#27-33" title="Go to source code">index</a>( )</code>
 
 		<div class="description short">
-			<p>This loads [to be specified]</p>
+			<p>This loads []</p>
 		</div>
 
 		<div class="description detailed hidden">
-			<p>This loads [to be specified]</p>
+			<p>This loads []</p>
 
 
 
@@ -180,7 +189,7 @@
 
 		<td class="name"><div>
 		<a class="anchor" href="#_register">#</a>
-		<code><a href="source-class-Game.html#30-53" title="Go to source code">register</a>( )</code>
+		<code><a href="source-class-Game.html#35-57" title="Go to source code">register</a>( )</code>
 
 		<div class="description short">
 			<p>registers the game and players in the database</p>
@@ -214,7 +223,7 @@
 
 		<td class="name"><div>
 		<a class="anchor" href="#_play">#</a>
-		<code><a href="source-class-Game.html#55-70" title="Go to source code">play</a>( )</code>
+		<code><a href="source-class-Game.html#59-81" title="Go to source code">play</a>( )</code>
 
 		<div class="description short">
 			<p>loads the game play data and loads the play page</p>
@@ -232,29 +241,135 @@
 		</div>
 		</div></td>
 	</tr>
-	<tr data-order="contributions" id="_contributions">
+	<tr data-order="getPlayData" id="_getPlayData">
 
 		<td class="attributes"><code>
 			 public 
 
-			
+			object
 			
 			</code>
 		</td>
 
 		<td class="name"><div>
-		<a class="anchor" href="#_contributions">#</a>
-		<code><a href="source-class-Game.html#72-79" title="Go to source code">contributions</a>( )</code>
+		<a class="anchor" href="#_getPlayData">#</a>
+		<code><a href="source-class-Game.html#82-93" title="Go to source code">getPlayData</a>( )</code>
 
 		<div class="description short">
-			<p>load the game contributions pages</p>
+			<p>gets the game data to initialise game components when game is in init state</p>
 		</div>
 
 		<div class="description detailed hidden">
-			<p>load the game contributions pages</p>
+			<p>gets the game data to initialise game components when game is in init state</p>
 
 
 
+				<h4>Returns</h4>
+				<div class="list">
+					object
+				</div>
+
+
+
+
+		</div>
+		</div></td>
+	</tr>
+	<tr data-order="count" id="_count">
+
+		<td class="attributes"><code>
+			 public 
+
+			integer
+			
+			</code>
+		</td>
+
+		<td class="name"><div>
+		<a class="anchor" href="#_count">#</a>
+		<code><a href="source-class-Game.html#95-103" title="Go to source code">count</a>( )</code>
+
+		<div class="description short">
+			<p>returns the number of games played on this server</p>
+		</div>
+
+		<div class="description detailed hidden">
+			<p>returns the number of games played on this server</p>
+
+
+
+				<h4>Returns</h4>
+				<div class="list">
+					integer
+				</div>
+
+
+
+
+		</div>
+		</div></td>
+	</tr>
+	<tr data-order="topGames" id="_topGames">
+
+		<td class="attributes"><code>
+			 public 
+
+			object
+			
+			</code>
+		</td>
+
+		<td class="name"><div>
+		<a class="anchor" href="#_topGames">#</a>
+		<code><a href="source-class-Game.html#105-113" title="Go to source code">topGames</a>( )</code>
+
+		<div class="description short">
+			<p>returns the games with the top scores</p>
+		</div>
+
+		<div class="description detailed hidden">
+			<p>returns the games with the top scores</p>
+
+
+
+				<h4>Returns</h4>
+				<div class="list">
+					object
+				</div>
+
+
+
+
+		</div>
+		</div></td>
+	</tr>
+	<tr data-order="get_all" id="_get_all">
+
+		<td class="attributes"><code>
+			 public 
+
+			type
+			
+			</code>
+		</td>
+
+		<td class="name"><div>
+		<a class="anchor" href="#_get_all">#</a>
+		<code><a href="source-class-Game.html#115-122" title="Go to source code">get_all</a>( )</code>
+
+		<div class="description short">
+			<p>returns information about all the games played on this server</p>
+		</div>
+
+		<div class="description detailed hidden">
+			<p>returns information about all the games played on this server</p>
+
+
+
+				<h4>Returns</h4>
+				<div class="list">
+					type<br>object
+				</div>
 
 
 
@@ -274,7 +389,7 @@
 
 		<td class="name"><div>
 		<a class="anchor" href="#_scores">#</a>
-		<code><a href="source-class-Game.html#81-88" title="Go to source code">scores</a>( )</code>
+		<code><a href="source-class-Game.html#123-130" title="Go to source code">scores</a>( )</code>
 
 		<div class="description short">
 			<p>loads the game scores page</p>
@@ -285,6 +400,74 @@
 
 
 
+
+
+
+
+		</div>
+		</div></td>
+	</tr>
+	<tr data-order="topScore" id="_topScore">
+
+		<td class="attributes"><code>
+			 public 
+
+			integer
+			
+			</code>
+		</td>
+
+		<td class="name"><div>
+		<a class="anchor" href="#_topScore">#</a>
+		<code><a href="source-class-Game.html#132-141" title="Go to source code">topScore</a>( )</code>
+
+		<div class="description short">
+			<p>gets the top score</p>
+		</div>
+
+		<div class="description detailed hidden">
+			<p>gets the top score</p>
+
+
+
+				<h4>Returns</h4>
+				<div class="list">
+					integer
+				</div>
+
+
+
+
+		</div>
+		</div></td>
+	</tr>
+	<tr data-order="lowScore" id="_lowScore">
+
+		<td class="attributes"><code>
+			 public 
+
+			integer
+			
+			</code>
+		</td>
+
+		<td class="name"><div>
+		<a class="anchor" href="#_lowScore">#</a>
+		<code><a href="source-class-Game.html#143-152" title="Go to source code">lowScore</a>( )</code>
+
+		<div class="description short">
+			<p>returns the lowest score</p>
+		</div>
+
+		<div class="description detailed hidden">
+			<p>returns the lowest score</p>
+
+
+
+				<h4>Returns</h4>
+				<div class="list">
+					integer
+				</div>
 
 
 
@@ -314,7 +497,7 @@
 </div>
 
 	<div id="footer">
-		Weakest-Link API documentation generated by <a href="http://apigen.org">ApiGen</a>
+		Weakest Link API API documentation generated by <a href="http://apigen.org">ApiGen</a>
 	</div>
 </div>
 </div>

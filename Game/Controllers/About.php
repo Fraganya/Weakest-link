@@ -6,45 +6,65 @@ $load=new Asset();
 $load->file(APIPATH.'Response.php');
 $load->file(MODELSPATH.'M_About.php');
 /**
- * Main Game controller
+ * About controller handling all requests to do with the game info
  */
 class About
 {
+    /**
+     * contains the AboutMgr model
+     * @var object
+     */
     private $infoMgr;
     /**
      * initialise controller variables here 
+     * instantiates the about model
      */
     public function __construct()
     {
         $this->infoMgr=new AboutMgr();
     }
     /**
-     * This loads [to be specified]
+     * gets and returns a JSON object with the gameinfo
+     * @return object
      */
-     public function getAboutInfo()
+     public function info()
      {
          $info=$this->infoMgr->getAboutInfo();
-         Response::respondWithJSON($info,"about");
+         return Response::respondWithJSON($info,"about");
      }
-     public function getAboutInfo_about()
+     /**
+      * gets and returns game information summary in JSON
+      * gets - version , game name and overview
+      * @return object
+      */
+     public function summary()
      {
          $info=$this->infoMgr->getAboutInfoAB();
-         Response::respondWithJSON($info,"about");
+         return Response::respondWithJSON($info,"about");
      }
     
-    public function getCreditInfo()
+     /**
+      * gets and returns credit information
+      * developer name , website and email
+      * @return object
+      */
+    public function credits()
     {
          $info=$this->infoMgr->getAboutInfoCR();
-         Response::respondWithJSON($info,"about");
+         return Response::respondWithJSON($info,"about");
     }
-
-    public function updateInfo()
+    /**
+     * updates a field in the info table of the gameinfo db
+     * gets a field and value as vars
+     * @return bool
+     */
+    public function update()
     {
         if(valid(array('field','value'),$_POST))
         {
                 // Extract all values into variables and prefix with Ex for Extracted
                 extract($_POST,EXTR_PREFIX_ALL, 'Ex');
-                return (Response::passive($infoMgr->updateAboutInfo($Ex_field,$Ex_value)));
+                return (Response::passive($this->infoMgr->updateAboutInfo($Ex_field,$Ex_value)));
         }
         Response::passive(false);
     }
