@@ -411,7 +411,7 @@ var VotingWindow=React.createClass({
             var votables=this.state.votables;
             if(votables.length==0){
                 var master=this.props.master;
-                var players=master.state.contestants;
+                var players=master.state.activeContestants;
                 var votes=this.state.votes;
 
                 players.map(function(player,index){
@@ -586,7 +586,7 @@ var GameController=React.createClass({
          * @var game -holds the game Object 
          * @vars c_player and c_round holds  the current player index and the current round number respectively
          */
-        return {contestants:[],game:new Game(),c_player:0,c_round:0}
+        return {activeContestants:[],contestants:[],game:new Game(),c_player:0,c_round:0}
     },
      /**
      * Get game data and initialise player Objects
@@ -612,7 +612,7 @@ var GameController=React.createClass({
                         if(index==0) currentPlayer.state="active";
                         playerArr.push(currentPlayer);
                     });
-                    this.setState({contestants:playerArr});
+                    this.setState({activeContestants:playerArr,contestants:playerArr.slice(0,playerArr.length),MAX_ROUNDS:(playerArr.length-2)});
                     this.state.game.id=gameInfo.game_id;
                 }
                 catch(err)
@@ -654,14 +654,14 @@ var GameController=React.createClass({
            msg.push("GoodBye!!");
            host.notifyPlayers(msg,function(){
                //remove the player
-               var players=this.state.contestants;
+               var players=this.state.activeContestants;
                for(var i=0;i<players.length;i++)
                {
                    if(players[i].fname==stackInfo.ejected.name){
                         players.splice(i,1);
                    }
                }
-               this.setState({contestants:players});
+               this.setState({activeContestants:players});
            }.bind(this))
         }.bind(this));
 
@@ -686,7 +686,7 @@ var GameController=React.createClass({
         // update game and player counters for the answer action
         var promiseToUpdate=new Promise(function(resolve,reject){
             var game=this.state.game;
-            var players=this.state.contestants;
+            var players=this.state.activeContestants;
             var c_index=this.state.c_player;
             var thisRound=this.state.c_round-1;
 
@@ -717,7 +717,7 @@ var GameController=React.createClass({
         }.bind(this))
     
         promiseToUpdate.then(function(response){
-            this.setState({contestants:response.p_hldr,game:response.g_hldr})
+            this.setState({activeContestants:response.p_hldr,game:response.g_hldr})
             this.setActivePlayer();
         }.bind(this))
         
@@ -731,7 +731,7 @@ var GameController=React.createClass({
         
         var promiseToUpdate=new Promise(function(resolve,reject){
             var game=this.state.game;
-            var players=this.state.contestants;
+            var players=this.state.activeContestants;
             var c_index=this.state.c_player;
 
             game.questions++;
@@ -743,7 +743,7 @@ var GameController=React.createClass({
         }.bind(this))
 
         promiseToUpdate.then(function(response){
-            this.setState({contestants:response.p_hldr,game:response.g_hldr})
+            this.setState({activeContestants:response.p_hldr,game:response.g_hldr})
             this.setActivePlayer();
         }.bind(this));
 
@@ -757,7 +757,7 @@ var GameController=React.createClass({
         //update game counters for the bank action
         var promiseToUpdate=new Promise(function(resolve,reject){
             var game=this.state.game;
-            var players=this.state.contestants;
+            var players=this.state.activeContestants;
             var c_index=this.state.c_player;
             var thisRound=(this.state.c_round)-1;
 
@@ -771,14 +771,14 @@ var GameController=React.createClass({
         }.bind(this))
 
         promiseToUpdate.then(function(response){
-            this.setState({contestants:response.p_hldr,game:response.g_hldr});
+            this.setState({activeContestants:response.p_hldr,game:response.g_hldr});
         }.bind(this))
     },
      /**
      * set active player
      */
      setActivePlayer:function(){
-        var players=this.state.contestants;
+        var players=this.state.activeContestants;
         var c_index=null;
         for(var c=0;c<players.length;c++)
         {
@@ -790,7 +790,7 @@ var GameController=React.createClass({
                 break;
             }
         }
-        this.setState({contestants:players,c_player:c_index});
+        this.setState({activeContestants:players,c_player:c_index});
     },
     /**
      * start  new round
@@ -798,7 +798,7 @@ var GameController=React.createClass({
     startRound:function(){
         
         var game_hldr=this.state.game;
-        var player_hldr=this.state.contestants;
+        var player_hldr=this.state.activeContestants;
         var thisRound=(this.state.c_round)+1;
 
          /**
@@ -830,9 +830,9 @@ var GameController=React.createClass({
 
         // update game counters for this round
         var game_hldr=this.state.game;
-        var player_hldr=this.state.contestants;
+        var player_hldr=this.state.activeContestants;
         var thisRound=this.state.c_round-1;
-
+        var allContestants=this.state.contestants;
         //game counters
         game_hldr.accumulated+=game_hldr.currentBank;
         game_hldr.getPlayTime();
@@ -849,6 +849,18 @@ var GameController=React.createClass({
         game_hldr.rounds[thisRound].strongestLink=getStrongestPlayer(player_hldr,game_hldr.rounds[thisRound]);
         game_hldr.rounds[thisRound].weakestLink=getWeakestPlayer(player_hldr,game_hldr.rounds[thisRound]);
         
+        //update statistics
+        for(var index=0;index<player_hldr.length;index++)
+        {
+            for(var innerIndex=0;innerIndex<allContestants.length;innerIndex++)
+            {
+                if(allContestants[innerIndex].fname==player_hldr[index].fname){
+                    allContestants[innerIndex]=player_hldr[index];
+                    break;
+                }
+            }
+        }
+        this.setState({activeContestants:player_hldr,contestants:allContestants,game:game_hldr});
         //notify players of perfomance
         var msgs=["Out of the 64,000 target"];
         getRoundRemarks(msgs,game_hldr.currentBank);
@@ -857,7 +869,7 @@ var GameController=React.createClass({
         })
 
         
-        this.setState({contestants:player_hldr,game:game_hldr});
+       
 
        // this.setState({contestants:player_hldr,game:game_hldr});
     },
@@ -866,9 +878,9 @@ var GameController=React.createClass({
         var playInfo={cBank:this.state.game.currentBank}
         return (
             <div>
-                <PlayWindow ref="pWindow" players={this.state.contestants} info={playInfo} master={this}/>
+                <PlayWindow ref="pWindow" players={this.state.activeContestants} info={playInfo} master={this}/>
                 <StatisticsWindow  ref="statWindow" players={this.state.contestants} game={this.state.game} master={this}/>
-                <VotingWindow ref="vWindow" players={this.state.contestants} master={this} />
+                <VotingWindow ref="vWindow" players={this.state.activeContestants} master={this} />
             </div>
 
         );
