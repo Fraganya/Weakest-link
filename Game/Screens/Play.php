@@ -14,7 +14,7 @@ $load=new Asset();
 ------------------------------------------------------------------------------*/
 $load->file(SCREENSPATH.'Common/Styles.php',array('load'=>$load));
 echo  $load->css("custom");
- echo  $load->icon('favicon');
+echo  $load->icon('favicon');
 ?>
 <title><?php echo $title; ?></title>
 </head>
@@ -58,11 +58,11 @@ echo  $load->css("custom");
    <section class="col-sm-5 game-messages">
    <div class="well well-sm well-game-header"><span class="fa fa-envelope"> </span> Game Messages</div>
      <div class="jumbotron">
-      <p class="well well-sm">Welcome contenstants </p>
+      <p class="well well-sm" id="off-play-msg-box">Welcome to the Weakest Link </p>
      </div>
      <div class="host-interaction-btns">    
-        <button type="button" id="int-btn-1" class="btn btn-large  wk-btn">start game</button>   
-        <button type="button" id="int-btn-2" class="btn btn-large  wk-btn">Interaction 2</button>   
+        <button type="button" id="int-btn-1" class="btn btn-large  wk-btn" >Interaction 1</button>   
+        <button type="button" id="int-btn-2" class="btn btn-large  wk-btn" >Interaction 2</button>   
      </div>
    </section><!--end of game messages section -->
    <!--game info section -->
@@ -83,7 +83,7 @@ echo  $load->css("custom");
      <button type="button" data-toggle="modal" data-target="#game-stats" class="btn btn-large btn-block wk-btn">Game Stats</button>
      <button type="button" data-toggle="modal" data-target="#game-history" class="btn btn-large btn-block wk-btn">History</button>
      <button type="button" data-toggle="modal" data-target="#game-advanced" class="btn btn-large btn-block wk-btn">Advanced</button>
-     <button type="button" data-toggle="modal" data-target="#game-play" class="btn btn-large btn-block wk-btn">Trigger game-play</button>
+     <button type="button" data-toggle="modal" data-target="#vote-window" class="btn btn-large btn-block wk-btn">Trigger vote-window</button>
      <button type="button" data-toggle="modal" data-target="#game-quit" class="btn btn-large btn-block wk-btn" >Quit</button>
      </div><!-- end of game screen btns-->
    </section><!--end of game info section -->
@@ -118,8 +118,8 @@ $load->file(SCREENSPATH.'Screen-ins/Advanced.php',array('load'=>$load));
   ------------------------------------------------------------------------------*/
   $load->file(SCREENSPATH.'Common/Scripts.php',array('load'=>$load));
   $load->file(SCREENSPATH.'Common/ReactDependency.php',array('load'=>$load));
-  echo $load->js("play");
   echo $load->js("core");
+  echo $load->js("play");
   echo $load->js("Components/PlayComponents");
   echo $load->js("Components/History");
   

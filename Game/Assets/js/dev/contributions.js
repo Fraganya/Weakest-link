@@ -8,7 +8,7 @@ var SuggestBox=React.createClass({
     getInitialState:function()
     {
         return {status:'not-suggesting',statusMsg:"Hi! How would you like to contribute ?",
-                    formErr:false,err:"Sorry something went wrong.Try again"};
+                    formErr:false,err:"Sorry something went wrong.Try again",done:false};
     },
     validateInputs:function(tag){
         var qInputs=$(tag);
@@ -92,7 +92,9 @@ var SuggestBox=React.createClass({
 
         promiseToAddQ.then(function(fromResolve){
             if(fromResolve){
-                this.setState({status:'not-suggesting'});
+                this.refs.qBox.value="";
+                this.refs.aBox.value="";
+                this.setState({done:true});
             }
         }.bind(this))
         
@@ -137,7 +139,7 @@ var SuggestBox=React.createClass({
             </div>
             
             <button type="button" className="btn wk-btn" onClick={this.sendQuestionSuggestion}>Suggest</button>
-            <button type="button" className="btn wk-btn marg-1" onClick={this.abort}>Cancel</button>
+            <button type="button" id="doneBtn" className="btn wk-btn marg-1" onClick={this.abort}>{(this.state.done)?"done":"cancel"}</button>
             </form>
         );
     },

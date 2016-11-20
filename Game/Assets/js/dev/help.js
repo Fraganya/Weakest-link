@@ -206,7 +206,7 @@ var AcknowledgementList=React.createClass({
         return(
             <div>
               {this.state.projects.map(function(library,index){
-                  return  <a target='_blank' href={'http:://'+library.website} key={index} className="list-group-item">{library.project}</a>
+                  return  <a target='_blank' href={'http://'+library.website} key={index} className="list-group-item">{library.project}</a>
               })}
             </div>
         )

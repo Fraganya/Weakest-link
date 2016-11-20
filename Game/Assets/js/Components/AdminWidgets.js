@@ -3,6 +3,25 @@
  * Adminstartion page script
  * @author Francis Ganya
  */
+
+
+function validate(inputTag){
+     var arr=$(inputTag);
+        var errors=0;
+        arr.map(function(index,input){
+            if(input.value.trim().length==0){
+                $(this).addClass('animated shake validation-error');
+                errors++;
+            }
+        });
+
+        setTimeout(function() {
+            $(inputTag).removeClass('animated shake validation-error');
+        }.bind(this), 1500);
+
+        if(errors!=0) return false; 
+        return true;
+}
 /**
  * returns a formated svg tag
  * @param svgTag - the tag to use in the svg class 
@@ -54,7 +73,8 @@ var FilterForm=React.createClass({displayName: "FilterForm",
         return{ 
             saveURL:"./?controller=questions&method=add",
             getURL:"./?controller=contributions&method=question",
-            removeLink:"./?controller=contributions&method=removeQuestion"
+            removeLink:"./?controller=contributions&method=removeQuestion",
+            btnText:"+ DB",mainHeader:"Inspect Contribution"
         }
     },
     reset:function()
@@ -72,15 +92,16 @@ var FilterForm=React.createClass({displayName: "FilterForm",
         return (
            React.createElement("div", {className: this.props.dimensions}, 
 				React.createElement("div", {className: "panel panel-primary"}, 
-				React.createElement("div", {className: "panel-heading dark-overlay", dangerouslySetInnerHTML: useSvg("monitor","monitor","Inspect Contribution")}), 
+				React.createElement("div", {className: "panel-heading dark-overlay", dangerouslySetInnerHTML: useSvg("monitor","monitor",this.props.mainHeader)}), 
                  React.createElement("div", {className: "panel-body"}, 
 					React.createElement("p", null, "Enter ID")
                  ), 
                 React.createElement("div", {className: "panel-footer"}, 
                 React.createElement("div", {className: "input-group"}, 
-                    React.createElement("input", {id: "filter-box", type: "text", value: this.state.id, onChange: this.handleChange, className: "form-control input-md", placeholder: "Inspect Contribution"}), 
+                    React.createElement("input", {id: "filter-box", type: "text", value: this.state.id, onChange: this.handleChange, className: "form-control input-md", placeholder: "Inspect"}), 
                     React.createElement("span", {className: "input-group-btn"}, 
-                        React.createElement("button", {type: "button", className: "btn btn-primary btn-md", onClick: this.getData}, "Inspect")
+                        React.createElement("button", {type: "button", className: "btn btn-primary btn-md", onClick: this.getData}, "inspect"), 
+                         React.createElement("button", {type: "button", className: "btn btn-danger btn-md", onClick: this.deleteQ}, "delete")
                     )
                 )
 				)
@@ -89,14 +110,52 @@ var FilterForm=React.createClass({displayName: "FilterForm",
         )
           
     },
+    fix:function()
+    {
+        var qBoxContent=this.refs.qBox.value;
+        var aBoxContent=this.refs.ansBox.value;
+
+        while(qBoxContent.lastIndexOf("\"")!=-1){
+            qBoxContent=qBoxContent.replace("\"","'");
+        }
+
+        while(aBoxContent.lastIndexOf("\"")!=-1){
+            aBoxContent=aBoxContent.replace("\"","'");
+        }
+
+        this.refs.qBox.value=qBoxContent;
+        this.refs.ansBox.value=aBoxContent;
+    },
+    deleteQ:function(){
+        if(!validate("#filter-box")) return;
+        var removeQ=new Promise(function(done){
+             $.post(this.props.removeLink,{id:this.state.id},function(data,status){
+                if(data=='true'){
+                   done();
+                }
+                else{
+                    console.error("Error"+data)
+                     $("#filter-box").addClass("validation-error");
+                }
+            })
+        }.bind(this));
+
+        removeQ.then(function(){
+           $("#filter-box").val('');
+           this.setState({step:"init",id:''});
+        }.bind(this));
+    },
     add:function()
     {
+      
+        if(!validate(".q-inspect-input")) return
          var sendData=new Promise(function(done){
-            $.post(this.props.saveURL,{
+            $.post(this.props.saveURL,{ 
                 question:this.refs.qBox.value,
                 answer:this.refs.ansBox.value,
                 tag:this.refs.tagBox.value,
-                category:this.refs.catBox.value
+                category:this.refs.catBox.value,
+                id:(this.props.formCat=="main-DB") ? this.state.id :''
             },function(data,status){
                 if(data==='true'){
                     done();
@@ -110,11 +169,18 @@ var FilterForm=React.createClass({displayName: "FilterForm",
 
         sendData.then(function(){
             return new Promise(function(done){
-                $.post(this.props.removeLink,{id:this.state.id},function(data,status){
+                if(this.props.formCat!="main-DB"){
+                    $.post(this.props.removeLink,{id:this.state.id},function(data,status){
                     if(data=='true'){
                         done();
                     }
-                });
+                 });
+                }
+                else{
+                    done();
+                }
+                
+                
             }.bind(this))
         }.bind(this)).then(function(){
              this.setState({step:"init",id:''});
@@ -123,17 +189,13 @@ var FilterForm=React.createClass({displayName: "FilterForm",
     // gets the data from the server using the supplied Question ID
     getData:function()
     {
-        if($("#filter-box").val().trim().length==0){
-            $("#filter-box").addClass('animated shake validation-error');
-            return ;
-        }
-        $("#filter-box").removeClass('animated shake validation-error');
+        if(!validate("#filter-box")) return ;
         var getData=new Promise(function(done){
             $.post(this.props.getURL,{id:this.state.id},function(data,status){
-                if(data!='false'){
+                if(data!='false' && data.trim().length!=0){
                    try{
                        var data=JSON.parse(data);
-                    $("#filter-box").removeClass("validation-error");
+                        $("#filter-box").removeClass("validation-error");
                     done(data);
                     }
                     catch(e){
@@ -144,14 +206,23 @@ var FilterForm=React.createClass({displayName: "FilterForm",
                 }
                 else{
                     console.error("Error"+data)
+                    $("#filter-box").addClass("validation-error");
                 }
             })
         }.bind(this));
 
         getData.then(function(data){
             this.setState({step:"gotten-data"});
-            this.refs.qBox.value=data.question;
-            this.refs.ansBox.value=data.answer;
+            if(this.props.formCat!="main-DB"){
+                this.refs.qBox.value=data.question;
+                this.refs.ansBox.value=data.answer;
+            }
+            if(this.props.formCat=="main-DB"){
+                this.refs.qBox.value=data[0].question;
+                this.refs.ansBox.value=data[0].answer;
+                this.refs.tagBox.value=data[0].tag;
+                this.refs.catBox.value=data[0].cat
+            }
         }.bind(this));
     },
     // render a new form for modifying the data
@@ -167,35 +238,47 @@ var FilterForm=React.createClass({displayName: "FilterForm",
                             React.createElement("div", {className: "form-group"}, 
                                 React.createElement("label", {className: "col-md-3 control-label", htmlFor: "question"}, "Question"), 
                                 React.createElement("div", {className: "col-md-9"}, 
-                                    React.createElement("input", {ref: "qBox", placeholder: "Question", className: "form-control"})
+                                    React.createElement("textarea", {ref: "qBox", placeholder: "Question", className: "form-control q-inspect-input", rows: "5"})
                                 )
                             ), 
     
                             React.createElement("div", {className: "form-group"}, 
                                 React.createElement("label", {className: "col-md-3 control-label", htmlFor: "answer"}, "Answer"), 
                                 React.createElement("div", {className: "col-md-9"}, 
-                                    React.createElement("textarea", {ref: "ansBox", className: "form-control", id: "message", name: "message", placeholder: "Answer", rows: "5"})
+                                    React.createElement("input", {ref: "ansBox", className: "form-control q-inspect-input", id: "message", name: "message", placeholder: "Answer"})
                                 )
                             ), 
 
                             React.createElement("div", {className: "form-group"}, 
                                 React.createElement("label", {className: "col-md-3 control-label", htmlFor: "tag"}, "Tag"), 
                                 React.createElement("div", {className: "col-md-9"}, 
-                                    React.createElement("input", {ref: "tagBox", type: "text", placeholder: "tag", className: "form-control"})
+                                    React.createElement("select", {ref: "tagBox", type: "text", placeholder: "tag", className: "form-control q-inspect-input"}, 
+                                        React.createElement("option", {value: "easy"}, "Easy"), 
+                                        React.createElement("option", {value: "medium"}, "Medium"), 
+                                        React.createElement("option", {value: "brainy"}, "Brainy")
+                                    )
                                 )
                             ), 
 
                             React.createElement("div", {className: "form-group"}, 
                                 React.createElement("label", {className: "col-md-3 control-label", htmlFor: "tag"}, "Category"), 
                                 React.createElement("div", {className: "col-md-9"}, 
-                                    React.createElement("input", {ref: "catBox", type: "text", placeholder: "category", className: "form-control"})
+                                    React.createElement("input", {ref: "catBox", type: "text", list: "cats", placeholder: "category", className: "form-control q-inspect-input"}), 
+                                    React.createElement("datalist", {id: "cats"}, 
+                                         React.createElement("option", {value: "computers"}), 
+                                         React.createElement("option", {value: "sports"}), 
+                                         React.createElement("option", {value: "food"}), 
+                                         React.createElement("option", {value: "animals"}), 
+                                         React.createElement("option", {value: "General Knowledge"})
+                                    )
                                 )
                             ), 
                             
                             React.createElement("div", {className: "form-group"}, 
                                 React.createElement("div", {className: "col-md-12 widget-right"}, 
-                                    React.createElement("button", {type: "button", className: "btn btn-primary btn-md pull-right", onClick: this.add}, "Add To Main DB "), 
-                                    React.createElement("button", {type: "button", className: "btn btn-primary btn-md pull-right", style: {marginRight:3+'px'}, onClick: this.reset}, "Cancel ")
+                                    React.createElement("button", {type: "button", className: "btn btn-success btn-md pull-right", onClick: this.add}, this.props.btnText), 
+                                    React.createElement("button", {type: "button", className: "btn btn-primary btn-md pull-right", style: {marginRight:3+'px'}, onClick: this.reset}, "Cancel "), 
+                                    React.createElement("button", {type: "button", className: "btn btn-danger btn-md pull-right", style: {marginRight:3+'px'}, onClick: this.fix}, "fix ")
                                 )
                             )
                         )
@@ -445,7 +528,7 @@ var Dashboard=React.createClass({displayName: "Dashboard",
     {
         return {
             widgets:[
-                {name:"gameCount",count:0,description:"Games played",color:"blue",icon:"chain",xLink:"chain"},
+                {name:"gameCount",count:0,description:"Game(s) played",color:"blue",icon:"chain",xLink:"chain"},
                 {name:"questionCount",count:0,description:"Question(s)",color:"red",icon:"internal hard drive",xLink:"internal-hard-drive"},
                 {name:"contribCount",count:0,description:"Contributions(+)",color:"teal",icon:"basket",xLink:"basket"},
                 {name:"topScore",count:0,description:"is the top score",color:"teal",icon:"flag",xLink:"flag"}
@@ -603,6 +686,9 @@ var QuestionSection=React.createClass({displayName: "QuestionSection",
             q_link:"./?controller=Questions&method=all",
             qc_link:"./?controller=Questions&method=count",
             dc_link:"./?controller=Questions&method=brainy_count",
+            getURL:"./?controller=questions&method=question",
+            saveLink:"./?controller=Questions&method=update",
+            removeLink:"./?controller=questions&method=remove",
             max:10000
 
         }
@@ -660,26 +746,45 @@ var QuestionSection=React.createClass({displayName: "QuestionSection",
     },
     getInitialState:function()
     {
-        return {panels:[]}
+        return {panels:[],edit:false}
+    },
+    toggleEdit:function()
+    {
+        this.setState({edit:!this.state.edit});
     },
     render:function()
     {
+        var aproRender=null;
+        if(this.state.edit==false){
+            aproRender=function(){
+                 return this.state.panels.map(function(panel,index){
+                         return(
+                             React.createElement(CustomPanel, {key: index, id: panel.id, percent: panel.count, tag: panel.text, color: panel.color})
+                         )
+                     });
+            }.bind(this);
+        }
+        else{
+            aproRender=function(){
+                return(
+                    React.createElement(FilterForm, {formCat: "main-DB", getURL: this.props.getURL, saveURL: this.props.saveLink, 
+                        removeLink: this.props.removeLink, mainHeader: "update", btnText: "update"})
+                )
+            }.bind(this);
+        }
         return(
             React.createElement("div", null, 
                 React.createElement(Header, {name: "Questions"}), 
                 /** main question components */
                 React.createElement("div", {className: "row"}, 
                 React.createElement(CustomTable, {title: "Questions in DB", link: this.props.q_link, 
-                     headers: ['id','question','answer',"last_accessed"], 
-                     dimensions: "col-lg-9 col-md-9 col-sm-9 col-xs-12"}), 
+                     headers: ['id','question','answer',"cat","last_accessed"], 
+                     dimensions: "col-lg-8 col-md-7 col-sm-8 col-xs-12"}), 
                  React.createElement("div", {className: "col-sm-3 col-lg-3 col-md-3"}, 
+                       aproRender(), 
                  
-                     this.state.panels.map(function(panel,index){
-                         return(
-                             React.createElement(CustomPanel, {key: index, id: panel.id, percent: panel.count, tag: panel.text, color: panel.color})
-                         )
-                     })
-                 
+                     React.createElement("button", {type: "button", className: "btn btn-primary", style: {marginRight:3+'px',marginLeft:20+'px'}, onClick: this.toggleEdit}, "Toggle Edit")
+                   
                  )
                 )
             )

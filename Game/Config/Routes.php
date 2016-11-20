@@ -11,7 +11,8 @@
 $routes['Admin']=array("index");
 $routes['Setup']=array("index","installation","bug");
 $routes['Game']=array("index","register","play","getPlayData","topGames","get_all","scores","topScore","lowScore","count");
-$routes['Questions']=array("all","add","count","getBrainy","brainy_count","getEasy","getMedium");
+$routes['Questions']=array("all","add","count","question","update","remove","getBrainy",
+                        "brainy_count","getEasy","getMedium","addQMarker");
 $routes['Contributions']=array(
                             "index","contributors","top_contributors","count",
                             "questions","question","removeQuestion","suggestions",

@@ -86,6 +86,7 @@ var MoneyBar=React.createClass({displayName: "MoneyBar",
  * Handles responses from the user 
  */
 var QuestionPanel=React.createClass({displayName: "QuestionPanel",
+    getInitialState:function(){return {q_time:20}},
     /**
      * the player answered -evaluate the answer
      */
@@ -96,6 +97,8 @@ var QuestionPanel=React.createClass({displayName: "QuestionPanel",
         if(status){
             this.props.aHwnd(true);
         }
+        this.clearQTimer();
+        this.askQuestion();
     },
     /**
      * player did not answer - the player failed the question
@@ -103,14 +106,45 @@ var QuestionPanel=React.createClass({displayName: "QuestionPanel",
     handlePass:function(){
         // call game-controllers handle pass method
         this.props.pHwnd();
-    },        
+    }, 
+    /**
+     * startQTimer starts the question timers
+     */
+    startQTimer:function(){
+        var timer=setInterval(function(){
+            var q_time=this.state.q_time;
+                if(q_time==0)
+                {
+                    this.timeOut();
+                }
+                else{
+                    this.setState({q_time:q_time-1});
+                }
+        }.bind(this),1000);
+        this.setState({q_timer:timer})
+    },
+    /**
+     * ends question timer
+     */
+    clearQTimer:function(){
+        this.setState({q_time:20});
+        window.clearInterval(this.state.q_timer);
+    },  
+    askQuestion:function(){
+        this.startQTimer();
+    },  
+    timeOut:function()
+    {
+        this.clearQTimer();
+        this.handlePass();
+    },
     render:function()
     {
         return (
             React.createElement("div", null, 
              React.createElement("div", {className: "panel panel-default"}, 
                    React.createElement("div", {className: "panel-heading"}, 
-                         React.createElement("h3", {className: "panel-title"}, "Question")
+                         React.createElement("h3", {className: "panel-title"}, "Question", React.createElement("span", {className: "pull-right"}, this.state.q_time))
                    ), 
                    React.createElement("div", {className: "panel-body"}, 
                          "Sample question here"
@@ -215,7 +249,7 @@ var PlayWindow=React.createClass({displayName: "PlayWindow",
              /* Main game play container  section */
              React.createElement("div", {className: "col-sm-8"}, 
                 React.createElement(ContestantBar, {players: this.props.players}), 
-                React.createElement(QuestionPanel, {banker: this.handleBank, aHwnd: this.props.master.handleAnswer, pHwnd: this.props.master.handlePass})
+                React.createElement(QuestionPanel, {banker: this.handleBank, aHwnd: this.props.master.handleAnswer, tHwnd: this.props.master.handleTimeOut, pHwnd: this.props.master.handlePass})
              ), /* end of main game play container section */
              /* timer section */
              React.createElement("div", {className: "col-sm-2"}, 
@@ -368,6 +402,178 @@ var StatisticsWindow=React.createClass({displayName: "StatisticsWindow",
 
     }
 });
+var VotingWindow=React.createClass({displayName: "VotingWindow",
+    getInitialState:function(){
+        return{isDone:false,voter:'',votables:[],count:0,cIndex:0,votes:[]}
+    },
+    componentWillReceiveProps:function(){
+            
+            var votables=this.state.votables;
+            if(votables.length==0){
+                var master=this.props.master;
+                var players=master.state.contestants;
+                var votes=this.state.votes;
+
+                players.map(function(player,index){
+                    votes.push({name:player.fname,cVotes:0});
+                });
+
+                for(var i=1;i<players.length;i++){
+                    votables.push(players[i].fname);
+                }
+                this.setState({count:players.length,voter:players[0].fname,votables:votables});
+                console.log("Received props");
+            }
+           
+    },
+    reset:function(){
+        this.setState({isDone:false,voter:'',votables:[],count:0,cIndex:0,votes:[]});
+    },
+    prepNextVote:function(){
+        var votables=[];
+        var players=this.props.players;
+        var cIndex=this.state.cIndex+1;
+      
+      if(this.state.tiedUp){
+          var stackInfo={
+              name:this.refs.voteBox.value,
+              cVotes:"super",
+          }
+          this.props.master.dispatchEvent({type:'vote',ejected:stackInfo});
+          console.log(stackInfo);
+          $("#vote-window").modal('hide');
+          this.reset();
+          return;
+      }
+       if(cIndex==this.state.count){
+            this.amendVotes();          
+            return;
+        }
+
+      //generate votables
+        for(var i=0;i<players.length;i++){
+            if(i==cIndex){
+            continue;
+            }
+            votables.push(players[i].fname);
+        }
+        
+        this.setState({voter:players[cIndex].fname,votables:votables,cIndex:cIndex});
+    },
+    handleVote:function(){
+        var votes=this.state.votes;
+        var voted=this.refs.voteBox.value;
+        for(var i=0;i<votes.length;i++)
+        {
+            if(votes[i].name===voted){
+                votes[i].cVotes++;
+            }
+        }
+        this.setState({votes:votes});
+        this.prepNextVote();
+    },
+    amendVotes:function()
+    {
+        //get the most voted link
+        var votes=this.state.votes;
+        var ties=[];
+        var tieStatus=false;
+        var mostVoted=votes[0];
+        for(var index=1;index<votes.length;index++)
+        {
+            if(votes[index].cVotes>mostVoted.cVotes){
+                 mostVoted=votes[index];
+            }
+        }
+
+        //check if there are ties
+        for(var index=0;index<votes.length;index++)
+        {
+            if((votes[index].cVotes==mostVoted.cVotes) && (votes[index].name!=mostVoted.name)){
+                ties.push(votes[index]);
+                tieStatus=true;
+            }
+        }
+        if(tieStatus){
+                ties.push(mostVoted); //consolidate ties byb adding the initial highest voted
+                var votables=[];
+                var master=this.props.master;
+                var voter=master.state.game.rounds[master.state.game.currentRound].strongestLink;
+
+                for(var i=0;i<ties.length;i++)
+                {
+                    if(voter==ties[i].name) continue;
+                    votables.push(ties[i].name);
+                } 
+                this.setState({voter:voter,votables:votables,tiedUp:true});
+        }
+        else{
+            this.props.master.dispatchEvent({type:'vote',ejected:mostVoted});
+            $("#vote-window").modal('hide');
+            this.reset();
+        }  
+    },
+    getVote:function(){
+        var tieMsg=function(){};
+        if(this.state.tiedUp){
+            tieMsg=function(){return(
+                 React.createElement("p", {className: ""}, 
+                 "We have a tie!", 
+                 React.createElement("br", null), 
+                 this.state.voter, "," + ' ' +
+                 "You are the Strongest Link and your decision is final!"
+                )
+            )}.bind(this);
+        }
+        return(
+            React.createElement("div", null, 
+             React.createElement("h3", null, this.state.voter), 
+                    React.createElement("div", {className: "well well-sm"}, 
+                    tieMsg(), 
+                    React.createElement("p", null, "Who Do you think is the weakest link that's slowing you down")
+                    ), 
+                    React.createElement("select", {className: "form-control", ref: "voteBox"}, 
+                        
+                            this.state.votables.map(function(player,index){
+                                return(
+                                    React.createElement("option", {key: index, value: player}, player)
+                                )
+                            })
+                        
+            ), 
+            React.createElement("button", {className: "btn wk-btn  marg-top", onClick: this.handleVote}, "Vote")
+            )
+        );
+    },
+    render:function(){
+        var aproFooter=function(){};
+        if(this.state.isDone){
+            aproFooter=function(){
+                return(
+                        React.createElement("div", {className: "modal-footer"}, /** <!--footer--> */
+                            React.createElement("button", {className: "btn wk-btn"}, "Done")
+                        )
+                    )
+            } 
+        }
+        return(
+            React.createElement("div", {className: "modal fade", id: "vote-window", "data-backdrop": "static"}, 
+            React.createElement("div", {className: "modal-dialog modal-sm"}, 
+            React.createElement("div", {className: "modal-content"}, 
+                React.createElement("div", {className: "modal-header"}, 
+                     React.createElement("button", {type: "button", className: "close", "data-dismiss": "modal", "aria-hidden": "true"}, "×"), 
+                     React.createElement("h3", {className: "modal-title"}, "Vote")
+                ), 
+                React.createElement("div", {className: "modal-body"}, 
+                 (!this.state.isDone) ? this.getVote():'this.FinalResponse()'
+                ), 
+                aproFooter()
+            )
+            )
+            )
+        )
+    }
+})
 /**
  * The game controller class 
  * Controls core game components - statistics, playwindow and history
@@ -427,10 +633,48 @@ var GameController=React.createClass({displayName: "GameController",
         this.addEvent('start',function(){
             this.startRound();
         }.bind(this));
+        
+        //register the voting event
+        this.addEvent('vote',function(stackInfo){
+            //prep ejection msg
+           var weakPlayer=this.state.game.rounds[this.state.game.currentRound].weakestLink;
+           var msg=[];
+           if(weakPlayer==="N/A"){
+               msg.push("Statistically there is no weak player.");
+               msg.push("But the group thinks your services are no longer required :)");
+           }
+           else{
+               msg.push("Statistically "+weakPlayer+" is the weakest link.");
+               msg.push(this.state.game.rounds[this.state.game.currentRound].weakReason);
+               if(weakPlayer!=stackInfo.ejected.name){
+                   msg.push("But the group does not think so.");
+               }
+           } 
+           msg.push(stackInfo.ejected.name+" you are the weakest link");
+           msg.push("GoodBye!!");
+           host.notifyPlayers(msg,function(){
+               //remove the player
+               var players=this.state.contestants;
+               for(var i=0;i<players.length;i++)
+               {
+                   if(players[i].fname==stackInfo.ejected.name){
+                        players.splice(i,1);
+                   }
+               }
+               this.setState({contestants:players});
+           }.bind(this))
+        }.bind(this));
 
         
         document.getElementById('int-btn-1').addEventListener('click',function(){handleCore(this)}.bind(this));
         document.getElementById('int-btn-2').addEventListener('click',function(){handleSub(this)}.bind(this));
+
+        //welcome the players
+        host.speak_plain(welcomeMsgs,"#off-play-msg-box",function(){
+        $("#int-btn-1").addClass('animated flash focused');
+        $("#int-btn-1").text('start game');
+       
+    }); 
     },
     /**
      * handle answer
@@ -527,8 +771,7 @@ var GameController=React.createClass({displayName: "GameController",
         }.bind(this))
 
         promiseToUpdate.then(function(response){
-            this.setState({contestants:response.p_hldr,game:response.g_hldr})
-            this.setActivePlayer();
+            this.setState({contestants:response.p_hldr,game:response.g_hldr});
         }.bind(this))
     },
      /**
@@ -553,8 +796,23 @@ var GameController=React.createClass({displayName: "GameController",
      * start  new round
      */
     startRound:function(){
+        
         var game_hldr=this.state.game;
+        var player_hldr=this.state.contestants;
         var thisRound=(this.state.c_round)+1;
+
+         /**
+         * reset necessary components from prev round
+         * reset money Bar in case the game time was up
+         */
+        this.refs.pWindow.refs.moneyBar.resetBar();
+        game_hldr.currentBank=0;
+        //reset round info for each player
+        for(var index=0;index<player_hldr.length;index++)
+        {
+            player_hldr[index].resetRoundInfo();
+        }
+
         //assign round number and add new round
         game_hldr.rounds.push(new Round(thisRound));
 
@@ -588,23 +846,18 @@ var GameController=React.createClass({displayName: "GameController",
             player_hldr[index].passed+=player_hldr[index].roundInfo.passed;
         }
 
-        game_hldr.rounds[thisRound].strongestLink="Francis"
-        game_hldr.rounds[thisRound].weakestLink="Johns";
+        game_hldr.rounds[thisRound].strongestLink=getStrongestPlayer(player_hldr,game_hldr.rounds[thisRound]);
+        game_hldr.rounds[thisRound].weakestLink=getWeakestPlayer(player_hldr,game_hldr.rounds[thisRound]);
+        
+        //notify players of perfomance
+        var msgs=["Out of the 64,000 target"];
+        getRoundRemarks(msgs,game_hldr.currentBank);
+        host.notifyPlayers(msgs,function(){
+             $('#vote-window').modal('show');
+        })
 
-
+        
         this.setState({contestants:player_hldr,game:game_hldr});
-
-        /**
-         * reset necessary components
-         * reset money Bar in case the game time was up
-         */
-        this.refs.pWindow.refs.moneyBar.resetBar();
-        game_hldr.currentBank=0;
-        //reset round info for each player
-        for(var index=0;index<player_hldr.length;index++)
-        {
-            player_hldr[index].resetRoundInfo();
-        }
 
        // this.setState({contestants:player_hldr,game:game_hldr});
     },
@@ -614,7 +867,8 @@ var GameController=React.createClass({displayName: "GameController",
         return (
             React.createElement("div", null, 
                 React.createElement(PlayWindow, {ref: "pWindow", players: this.state.contestants, info: playInfo, master: this}), 
-                React.createElement(StatisticsWindow, {ref: "statWindow", players: this.state.contestants, game: this.state.game, master: this})
+                React.createElement(StatisticsWindow, {ref: "statWindow", players: this.state.contestants, game: this.state.game, master: this}), 
+                React.createElement(VotingWindow, {ref: "vWindow", players: this.state.contestants, master: this})
             )
 
         );
@@ -629,5 +883,4 @@ ReactDOM.render(GameCtrl,document.getElementById('game-controller'));
 /**
  *  Game Interaction buttons
  */
-
-
+document.getElementById('int-btn-1').addEventListener('click',handleCore(GameCtrl));

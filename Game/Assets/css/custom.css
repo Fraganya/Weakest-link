@@ -196,6 +196,9 @@ ul.contestant-bar li.active {
 .validation-error {
   border-color: red;
 }
+.focused {
+  border-color: orange;
+}
 .loader {
   border: 16px solid #E3F2FD;
   border-radius: 50%;

@@ -18,20 +18,51 @@ class WKL_QuestionMgr extends M_WKL_BASE
     * @param type $cat
     * @return boolean
     */
-   public function add($question,$answer,$tag,$cat)
+
+    public function sanitize()
+    {
+        $questions=$this->getQuestions();
+        $query='';
+        foreach($questions as $question)
+        {
+            $str=$question['question'];
+            if($str[strlen($str)-1]!='?') 
+            {
+                $question['question'].="?";
+                $query.="update wkl_questions set question=\"{$question['question']}\" where question_id={$question['id']};";
+            }
+        }
+        $this->_setSql($query);
+        $this->_contactDB(TRUE);
+
+        echo "done";
+    }
+   public function add($question,$answer,$tag,$cat,$UPDATE=FALSE,$id=null)
    {
-       $query=sprintf('INSERT INTO wkl_questions(question,category,difficulty,last_access) VALUES("%s","%s","%s",CURTIME())',
+       if($UPDATE){
+           $query=sprintf('UPDATE wkl_questions SET question="%s" ,category="%s",difficulty="%s" where question_id=%d', $question,$cat,$tag,$id);
+       }
+       else{
+           $query=sprintf('INSERT INTO wkl_questions(question,category,difficulty,last_access) VALUES("%s","%s","%s",CURTIME())',
                      $question,$cat,$tag);
+       }
+       
        $this->_setSql($query);
        $this->_contactDB();
 
-       // get the id of the just added Questions
-       $this->_setSql("select question_id from wkl_questions order by question_id desc limit 1");
-       $this->_contactDB();
+       if(!$UPDATE)
+       {
+            // get the id of the just added Questions
+            $this->_setSql("select question_id from wkl_questions order by question_id desc limit 1");
+            $this->_contactDB();
 
-       $id=$this->contactMgr->fetch_array(MYSQLI_ASSOC)['question_id'];
-
-       $this->_setSql("insert into wkl_answers(to_qid,answer) values('{$id}','{$answer}')");
+            $id=$this->contactMgr->fetch_array(MYSQLI_ASSOC)['question_id'];
+            $this->_setSql("insert into wkl_answers(to_qid,answer) values('{$id}','{$answer}')");
+       }
+       else{
+           $this->_setSql("update wkl_answers set answer='{$answer}' where to_qid={$id}");
+       }
+      
        $this->_contactDB();
 
        return true;
@@ -58,9 +89,15 @@ class WKL_QuestionMgr extends M_WKL_BASE
     * gets question data from the main production DB
     * @return array
     */
-   public function getQuestions()
+   public function getQuestions($SINGLE=FALSE,$id=NULL)
    {
-       $this->_setSql("SELECT * FROM wkl_questions INNER JOIN wkl_answers ON wkl_questions.question_id=wkl_answers.to_qid");
+       if($SINGLE==TRUE && $id!=NULL){
+           $this->_setSql("SELECT * FROM wkl_questions INNER JOIN wkl_answers ON wkl_questions.question_id=wkl_answers.to_qid 
+                          where question_id={$id}");
+       }
+       else{
+            $this->_setSql("SELECT * FROM wkl_questions INNER JOIN wkl_answers ON wkl_questions.question_id=wkl_answers.to_qid");
+       }
        $this->_contactDB();
 
        //encode the questions into an array
@@ -76,7 +113,7 @@ class WKL_QuestionMgr extends M_WKL_BASE
 
             );
         }
-
+        if(empty($this->tempArray)) $this->tempArray=null;
         return $this->tempArray;
    }
    
@@ -109,6 +146,14 @@ class WKL_QuestionMgr extends M_WKL_BASE
         if(empty($this->tempArray)) $this->tempArray=array();
         return $this->tempArray;
    }
-   
+    
+    public function removeQuestion($id)
+    {
+        $this->_setSql("delete from wkl_questions where question_id={$id};delete from wkl_answers where to_qid={$id};");
+        $this->_contactDB(TRUE);
+        
+     
+        return true;
+    }
 }
 ?>

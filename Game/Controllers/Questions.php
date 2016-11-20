@@ -93,6 +93,39 @@ class Questions
        $data=$this->questionMgr->getByDifficulty("brainy");
        Response::respondWithJSON(array('count'=>count($data)),"questions");
    }
+
+   public function question()
+   {
+       if(valid('id',$_POST)){
+           return Response::respondWithJSON($this->questionMgr->getQuestions(TRUE,$_POST['id']),"Question");
+       }
+       Response::passive(false);
+   }
+
+  public function update()
+   {
+       if(valid(array('question','answer','tag','category','id'),$_POST))
+       {
+           extract($_POST,EXTR_PREFIX_ALL,'Ex');
+           // set the fifth param to true in order to update
+           return Response::passive($this->questionMgr->add($Ex_question,$Ex_answer,$Ex_tag,$Ex_category,TRUE,$Ex_id));
+       }
+       return Response::passive(false);
+   }
+
+   public function remove()
+   { 
+        if(valid('id',$_POST))
+        {
+            return Response::passive($this->questionMgr->removeQuestion($_POST['id']));
+        }
+        return Response::passive(false);
+   }
+
+   public function addQMarker()
+   {
+       $this->questionMgr->sanitize();
+   }
 }
 
 ?>

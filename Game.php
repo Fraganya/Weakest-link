@@ -23,12 +23,14 @@ $Asset=new Asset();
 $Asset->file(APIPATH."Helpers.php");
 $Asset->file(APIPATH."Screen.php");
 
-
+/**
+* Extract URI parts
+*/
 /*-----------------------------------------------------------------------------
 |                        Get Controller and action
 -----------------------------------------------------------------------------*/
-$controller=(isset($_GET['controller'])) ? ucfirst($_GET['controller']) : 'Setup';
-$method=(isset($_GET['method'])) ? $_GET['method'] : 'index';
+$controller=(isset($_GET['controller']) && !empty($_GET['controller'])) ? ucfirst($_GET['controller']) : 'Setup';
+$method=(isset($_GET['method']) && !empty($_GET['method'])) ? $_GET['method'] : 'index';
 
 /*-----------------------------------------------------------------------------
 |                        Validate the route

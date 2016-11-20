@@ -4,7 +4,7 @@
 
 $host='localhost';
 $username='root';
-$key='';
+$key='root';
 $db='wkl';
 
 ?>

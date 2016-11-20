@@ -3,6 +3,25 @@
  * Adminstartion page script
  * @author Francis Ganya
  */
+
+
+function validate(inputTag){
+     var arr=$(inputTag);
+        var errors=0;
+        arr.map(function(index,input){
+            if(input.value.trim().length==0){
+                $(this).addClass('animated shake validation-error');
+                errors++;
+            }
+        });
+
+        setTimeout(function() {
+            $(inputTag).removeClass('animated shake validation-error');
+        }.bind(this), 1500);
+
+        if(errors!=0) return false; 
+        return true;
+}
 /**
  * returns a formated svg tag
  * @param svgTag - the tag to use in the svg class 
@@ -54,7 +73,8 @@ var FilterForm=React.createClass({
         return{ 
             saveURL:"./?controller=questions&method=add",
             getURL:"./?controller=contributions&method=question",
-            removeLink:"./?controller=contributions&method=removeQuestion"
+            removeLink:"./?controller=contributions&method=removeQuestion",
+            btnText:"+ DB",mainHeader:"Inspect Contribution"
         }
     },
     reset:function()
@@ -72,15 +92,16 @@ var FilterForm=React.createClass({
         return (
            <div className={this.props.dimensions}>
 				<div className="panel panel-primary">
-				<div className="panel-heading dark-overlay" dangerouslySetInnerHTML={useSvg("monitor","monitor","Inspect Contribution")} />
+				<div className="panel-heading dark-overlay" dangerouslySetInnerHTML={useSvg("monitor","monitor",this.props.mainHeader)} />
                  <div className="panel-body">
 					<p>Enter ID</p>
                  </div>
                 <div className="panel-footer">
                 <div className="input-group">
-                    <input id="filter-box" type="text" value={this.state.id} onChange={this.handleChange} className="form-control input-md" placeholder="Inspect Contribution" />
+                    <input id="filter-box" type="text" value={this.state.id} onChange={this.handleChange} className="form-control input-md" placeholder="Inspect" />
                     <span className="input-group-btn">
-                        <button type="button" className="btn btn-primary btn-md" onClick={this.getData}>Inspect</button>
+                        <button type="button" className="btn btn-primary btn-md" onClick={this.getData}>inspect</button>
+                         <button type="button" className="btn btn-danger btn-md" onClick={this.deleteQ}>delete</button>
                     </span>
                 </div>
 				</div>
@@ -89,14 +110,52 @@ var FilterForm=React.createClass({
         )
           
     },
+    fix:function()
+    {
+        var qBoxContent=this.refs.qBox.value;
+        var aBoxContent=this.refs.ansBox.value;
+
+        while(qBoxContent.lastIndexOf("\"")!=-1){
+            qBoxContent=qBoxContent.replace("\"","'");
+        }
+
+        while(aBoxContent.lastIndexOf("\"")!=-1){
+            aBoxContent=aBoxContent.replace("\"","'");
+        }
+
+        this.refs.qBox.value=qBoxContent;
+        this.refs.ansBox.value=aBoxContent;
+    },
+    deleteQ:function(){
+        if(!validate("#filter-box")) return;
+        var removeQ=new Promise(function(done){
+             $.post(this.props.removeLink,{id:this.state.id},function(data,status){
+                if(data=='true'){
+                   done();
+                }
+                else{
+                    console.error("Error"+data)
+                     $("#filter-box").addClass("validation-error");
+                }
+            })
+        }.bind(this));
+
+        removeQ.then(function(){
+           $("#filter-box").val('');
+           this.setState({step:"init",id:''});
+        }.bind(this));
+    },
     add:function()
     {
+      
+        if(!validate(".q-inspect-input")) return
          var sendData=new Promise(function(done){
-            $.post(this.props.saveURL,{
+            $.post(this.props.saveURL,{ 
                 question:this.refs.qBox.value,
                 answer:this.refs.ansBox.value,
                 tag:this.refs.tagBox.value,
-                category:this.refs.catBox.value
+                category:this.refs.catBox.value,
+                id:(this.props.formCat=="main-DB") ? this.state.id :''
             },function(data,status){
                 if(data==='true'){
                     done();
@@ -110,11 +169,18 @@ var FilterForm=React.createClass({
 
         sendData.then(function(){
             return new Promise(function(done){
-                $.post(this.props.removeLink,{id:this.state.id},function(data,status){
+                if(this.props.formCat!="main-DB"){
+                    $.post(this.props.removeLink,{id:this.state.id},function(data,status){
                     if(data=='true'){
                         done();
                     }
-                });
+                 });
+                }
+                else{
+                    done();
+                }
+                
+                
             }.bind(this))
         }.bind(this)).then(function(){
              this.setState({step:"init",id:''});
@@ -123,17 +189,13 @@ var FilterForm=React.createClass({
     // gets the data from the server using the supplied Question ID
     getData:function()
     {
-        if($("#filter-box").val().trim().length==0){
-            $("#filter-box").addClass('animated shake validation-error');
-            return ;
-        }
-        $("#filter-box").removeClass('animated shake validation-error');
+        if(!validate("#filter-box")) return ;
         var getData=new Promise(function(done){
             $.post(this.props.getURL,{id:this.state.id},function(data,status){
-                if(data!='false'){
+                if(data!='false' && data.trim().length!=0){
                    try{
                        var data=JSON.parse(data);
-                    $("#filter-box").removeClass("validation-error");
+                        $("#filter-box").removeClass("validation-error");
                     done(data);
                     }
                     catch(e){
@@ -144,14 +206,23 @@ var FilterForm=React.createClass({
                 }
                 else{
                     console.error("Error"+data)
+                    $("#filter-box").addClass("validation-error");
                 }
             })
         }.bind(this));
 
         getData.then(function(data){
             this.setState({step:"gotten-data"});
-            this.refs.qBox.value=data.question;
-            this.refs.ansBox.value=data.answer;
+            if(this.props.formCat!="main-DB"){
+                this.refs.qBox.value=data.question;
+                this.refs.ansBox.value=data.answer;
+            }
+            if(this.props.formCat=="main-DB"){
+                this.refs.qBox.value=data[0].question;
+                this.refs.ansBox.value=data[0].answer;
+                this.refs.tagBox.value=data[0].tag;
+                this.refs.catBox.value=data[0].cat
+            }
         }.bind(this));
     },
     // render a new form for modifying the data
@@ -167,35 +238,47 @@ var FilterForm=React.createClass({
                             <div className="form-group">
                                 <label className="col-md-3 control-label" htmlFor="question">Question</label>
                                 <div className="col-md-9">
-                                    <input ref="qBox" placeholder="Question" className="form-control" />
+                                    <textarea ref="qBox" placeholder="Question" className="form-control q-inspect-input" rows='5' />
                                 </div>
                             </div>
     
                             <div className="form-group">
                                 <label className="col-md-3 control-label" htmlFor="answer">Answer</label>
                                 <div className="col-md-9">
-                                    <textarea ref="ansBox"className="form-control" id="message" name="message" placeholder="Answer" rows="5"></textarea>
+                                    <input ref="ansBox"className="form-control q-inspect-input" id="message" name="message" placeholder="Answer" />
                                 </div>
                             </div>
 
                             <div className="form-group">
                                 <label className="col-md-3 control-label" htmlFor="tag">Tag</label>
                                 <div className="col-md-9">
-                                    <input ref="tagBox" type="text" placeholder="tag" className="form-control" />
+                                    <select ref="tagBox" type="text" placeholder="tag" className="form-control q-inspect-input" >
+                                        <option value="easy">Easy</option>
+                                        <option value="medium">Medium</option>
+                                        <option value="brainy">Brainy</option>
+                                    </select>
                                 </div>
                             </div>
 
                             <div className="form-group">
                                 <label className="col-md-3 control-label" htmlFor="tag">Category</label>
                                 <div className="col-md-9">
-                                    <input ref="catBox" type="text" placeholder="category" className="form-control" />
+                                    <input ref="catBox" type="text" list="cats" placeholder="category" className="form-control q-inspect-input" />
+                                    <datalist id="cats">
+                                         <option value="computers" />
+                                         <option value="sports" />
+                                         <option value="food" />
+                                         <option value="animals" />
+                                         <option value="General Knowledge"/>
+                                    </datalist>
                                 </div>
                             </div>
                             
                             <div className="form-group">
                                 <div className="col-md-12 widget-right">
-                                    <button type="button" className="btn btn-primary btn-md pull-right" onClick={this.add}>Add To Main DB </button>
-                                    <button type="button" className="btn btn-primary btn-md pull-right" style={{marginRight:3+'px'}}onClick={this.reset}>Cancel </button>
+                                    <button type="button" className="btn btn-success btn-md pull-right" onClick={this.add}>{this.props.btnText}</button>
+                                    <button type="button" className="btn btn-primary btn-md pull-right" style={{marginRight:3+'px'}} onClick={this.reset}>Cancel </button>
+                                    <button type="button" className="btn btn-danger btn-md pull-right" style={{marginRight:3+'px'}}onClick={this.fix}>fix </button>
                                 </div>
                             </div>
                         </fieldset>
@@ -445,7 +528,7 @@ var Dashboard=React.createClass({
     {
         return {
             widgets:[
-                {name:"gameCount",count:0,description:"Games played",color:"blue",icon:"chain",xLink:"chain"},
+                {name:"gameCount",count:0,description:"Game(s) played",color:"blue",icon:"chain",xLink:"chain"},
                 {name:"questionCount",count:0,description:"Question(s)",color:"red",icon:"internal hard drive",xLink:"internal-hard-drive"},
                 {name:"contribCount",count:0,description:"Contributions(+)",color:"teal",icon:"basket",xLink:"basket"},
                 {name:"topScore",count:0,description:"is the top score",color:"teal",icon:"flag",xLink:"flag"}
@@ -603,6 +686,9 @@ var QuestionSection=React.createClass({
             q_link:"./?controller=Questions&method=all",
             qc_link:"./?controller=Questions&method=count",
             dc_link:"./?controller=Questions&method=brainy_count",
+            getURL:"./?controller=questions&method=question",
+            saveLink:"./?controller=Questions&method=update",
+            removeLink:"./?controller=questions&method=remove",
             max:10000
 
         }
@@ -660,26 +746,45 @@ var QuestionSection=React.createClass({
     },
     getInitialState:function()
     {
-        return {panels:[]}
+        return {panels:[],edit:false}
+    },
+    toggleEdit:function()
+    {
+        this.setState({edit:!this.state.edit});
     },
     render:function()
     {
+        var aproRender=null;
+        if(this.state.edit==false){
+            aproRender=function(){
+                 return this.state.panels.map(function(panel,index){
+                         return(
+                             <CustomPanel key={index} id={panel.id} percent={panel.count} tag={panel.text} color={panel.color}/>
+                         )
+                     });
+            }.bind(this);
+        }
+        else{
+            aproRender=function(){
+                return(
+                    <FilterForm  formCat="main-DB" getURL={this.props.getURL} saveURL={this.props.saveLink}
+                        removeLink={this.props.removeLink} mainHeader="update" btnText="update"/>
+                )
+            }.bind(this);
+        }
         return(
             <div>
                 <Header name="Questions"/>
                 {/** main question components */}
                 <div className="row">
                 <CustomTable title="Questions in DB" link={this.props.q_link}
-                     headers={['id','question','answer',"last_accessed"]}
-                     dimensions="col-lg-9 col-md-9 col-sm-9 col-xs-12" />
+                     headers={['id','question','answer',"cat","last_accessed"]}
+                     dimensions="col-lg-8 col-md-7 col-sm-8 col-xs-12" />
                  <div className="col-sm-3 col-lg-3 col-md-3">
-                 {
-                     this.state.panels.map(function(panel,index){
-                         return(
-                             <CustomPanel key={index} id={panel.id} percent={panel.count} tag={panel.text} color={panel.color}/>
-                         )
-                     })
-                 }
+                    {   aproRender()    }
+                 
+                     <button type="button" className="btn btn-primary" style={{marginRight:3+'px',marginLeft:20+'px'}} onClick={this.toggleEdit}>Toggle Edit</button> 
+                   
                  </div>
                 </div>
             </div>
