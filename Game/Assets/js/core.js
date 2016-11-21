@@ -248,7 +248,7 @@ function getWeakestPlayer(c_arr,thisRound)
  */
 function handleCore(controller){
     var action=$("#int-btn-1").text();
-    if(action==='start game'){
+    if(action==='start game' || action==='Start round'){
         $('#game-play').modal('show');
         setTimeout(controller.dispatchEvent({type:'start'}),50000);
         setInteraction("Interaction 1","Game in progress",function(){
@@ -363,5 +363,9 @@ function getRoundRemarks(container,earnings)
     container.push("That money will go to the next round but one of you will "+(['certainly','definately','surely'])[Math.floor(Math.random()*3)] +" not")
     container.push(puns[Math.floor(Math.random()*5)]);
     container.push("it's time to vote off the weakest link!");
+}
+
+function getLastRemarks(container){
+    
 }
 var host=new Host();
