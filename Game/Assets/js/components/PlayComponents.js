@@ -87,7 +87,7 @@ var MoneyBar=React.createClass({displayName: "MoneyBar",
  * Handles responses from the user 
  */
 var QuestionPanel=React.createClass({displayName: "QuestionPanel",
-    getInitialState:function(){return {q_time:20}},
+    getInitialState:function(){return {q_time:20,q_timer:null}},
     /**
      * the player answered -evaluate the answer
      */
@@ -98,7 +98,6 @@ var QuestionPanel=React.createClass({displayName: "QuestionPanel",
         if(status){
             this.props.aHwnd(true);
         }
-        this.clearQTimer();
         this.askQuestion();
     },
     /**
@@ -107,7 +106,6 @@ var QuestionPanel=React.createClass({displayName: "QuestionPanel",
     handlePass:function(){
         // call game-controllers handle pass method
        this.props.pHwnd();
-       this.clearQTimer();
        this.askQuestion();
     }, 
     /**
@@ -115,36 +113,28 @@ var QuestionPanel=React.createClass({displayName: "QuestionPanel",
      */
     startQCounter:function(){
         var timer=setInterval(this.updateQCounter,1000);
-        this.setState({q_timer:timer})
+        this.setState({q_timer:timer});
     },
     updateQCounter:function(){
        if(this.state.q_time==0){
-                window.clearInterval(this.state.q_timer);
-                this.timeOut();
+           //timeout
+                this.handlePass();
             }
-            else{
-                var timer=this.state.q_time-1;
-                this.setState({q_time:timer});
+        else{
+                var time=this.state.q_time-1;
+                this.setState({q_time:time});
          }
     },
     /**
      * ends question timer
      */
     clearQTimer:function(){
-        this.setState({q_time:20});
-        //console.log("I get HEre")
-        if(this.state.q_timer){
-           // console.log("Im in the clear zone")
-             window.clearInterval(this.state.q_timer);
-        }
+          this.setState({q_time:20});
+          clearInterval(this.state.q_timer);
     },  
     askQuestion:function(){
-        this.startQCounter();
+        this.setState({q_time:20});
     },  
-    timeOut:function()
-    {
-        this.handlePass();
-    },
     render:function()
     {
         return (
@@ -208,6 +198,7 @@ var PlayWindow=React.createClass({displayName: "PlayWindow",
                 this.setState({roundTime:90});
                 window.clearInterval(this.state.r_timer);
                 this.props.master.endRound();
+                this.refs.qPanel.clearQTimer();
             }
             else{
                 var timer=this.state.roundTime-1;
@@ -227,7 +218,7 @@ var PlayWindow=React.createClass({displayName: "PlayWindow",
      */
     startRound:function(){
         var timer=setInterval(this.updateTimer,1000);
-        //this.refs.qPanel.askQuestion();
+        this.refs.qPanel.startQCounter();
         this.setState({r_timer:timer})
     },
     /**
@@ -235,7 +226,6 @@ var PlayWindow=React.createClass({displayName: "PlayWindow",
      */
     endRound:function(){
         this.setState({roundTime:90});
-        console.log("Im ending the round");
         this.refs.qPanel.clearQTimer();
         window.clearInterval(this.state.r_timer);
     },
@@ -432,7 +422,6 @@ var VotingWindow=React.createClass({displayName: "VotingWindow",
                     votables.push(players[i].fname);
                 }
                 this.setState({count:players.length,voter:players[0].fname,votables:votables});
-                console.log("Received props");
             }
            
     },
@@ -450,7 +439,6 @@ var VotingWindow=React.createClass({displayName: "VotingWindow",
               cVotes:"super",
           }
           this.props.master.dispatchEvent({type:'vote',ejected:stackInfo});
-          console.log(stackInfo);
           $("#vote-window").modal('hide');
           this.reset();
           return;
@@ -835,7 +823,6 @@ var GameController=React.createClass({displayName: "GameController",
         this.setState({game:game_hldr,c_round:thisRound});
 
         // start game time counter 
-        console.log(thisRound);
         if(thisRound!=MAX_ROUNDS)
         {
              this.refs.pWindow.startRound();
