@@ -7,6 +7,7 @@
  * ContestantBar
  * render the contestant's Bar'
  */
+//console.log("Realoaded");
 var ContestantBar=React.createClass({displayName: "ContestantBar",
     getDefaultProps:function()
     {
@@ -86,7 +87,7 @@ var MoneyBar=React.createClass({displayName: "MoneyBar",
  * Handles responses from the user 
  */
 var QuestionPanel=React.createClass({displayName: "QuestionPanel",
-    getInitialState:function(){return {q_time:20}},
+    getInitialState:function(){return {q_time:20,q_timer:null}},
     /**
      * the player answered -evaluate the answer
      */
@@ -97,7 +98,6 @@ var QuestionPanel=React.createClass({displayName: "QuestionPanel",
         if(status){
             this.props.aHwnd(true);
         }
-        this.clearQTimer();
         this.askQuestion();
     },
     /**
@@ -105,39 +105,36 @@ var QuestionPanel=React.createClass({displayName: "QuestionPanel",
      */
     handlePass:function(){
         // call game-controllers handle pass method
-        this.props.pHwnd();
+       this.props.pHwnd();
+       this.askQuestion();
     }, 
     /**
      * startQTimer starts the question timers
      */
-    startQTimer:function(){
-        var timer=setInterval(function(){
-            var q_time=this.state.q_time;
-                if(q_time==0)
-                {
-                    this.timeOut();
-                }
-                else{
-                    this.setState({q_time:q_time-1});
-                }
-        }.bind(this),1000);
-        this.setState({q_timer:timer})
+    startQCounter:function(){
+        var timer=setInterval(this.updateQCounter,1000);
+        this.setState({q_timer:timer});
+    },
+    updateQCounter:function(){
+       if(this.state.q_time==0){
+           //timeout
+                this.handlePass();
+            }
+        else{
+                var time=this.state.q_time-1;
+                this.setState({q_time:time});
+         }
     },
     /**
      * ends question timer
      */
     clearQTimer:function(){
-        this.setState({q_time:20});
-        window.clearInterval(this.state.q_timer);
+          this.setState({q_time:20});
+          clearInterval(this.state.q_timer);
     },  
     askQuestion:function(){
-        this.startQTimer();
+        this.setState({q_time:20});
     },  
-    timeOut:function()
-    {
-        this.clearQTimer();
-        this.handlePass();
-    },
     render:function()
     {
         return (
@@ -201,6 +198,7 @@ var PlayWindow=React.createClass({displayName: "PlayWindow",
                 this.setState({roundTime:90});
                 window.clearInterval(this.state.r_timer);
                 this.props.master.endRound();
+                this.refs.qPanel.clearQTimer();
             }
             else{
                 var timer=this.state.roundTime-1;
@@ -220,6 +218,7 @@ var PlayWindow=React.createClass({displayName: "PlayWindow",
      */
     startRound:function(){
         var timer=setInterval(this.updateTimer,1000);
+        this.refs.qPanel.startQCounter();
         this.setState({r_timer:timer})
     },
     /**
@@ -227,6 +226,7 @@ var PlayWindow=React.createClass({displayName: "PlayWindow",
      */
     endRound:function(){
         this.setState({roundTime:90});
+        this.refs.qPanel.clearQTimer();
         window.clearInterval(this.state.r_timer);
     },
     render:function()
@@ -249,7 +249,7 @@ var PlayWindow=React.createClass({displayName: "PlayWindow",
              /* Main game play container  section */
              React.createElement("div", {className: "col-sm-8"}, 
                 React.createElement(ContestantBar, {players: this.props.players}), 
-                React.createElement(QuestionPanel, {banker: this.handleBank, aHwnd: this.props.master.handleAnswer, tHwnd: this.props.master.handleTimeOut, pHwnd: this.props.master.handlePass})
+                React.createElement(QuestionPanel, {ref: "qPanel", banker: this.handleBank, aHwnd: this.props.master.handleAnswer, tHwnd: this.props.master.handleTimeOut, pHwnd: this.props.master.handlePass})
              ), /* end of main game play container section */
              /* timer section */
              React.createElement("div", {className: "col-sm-2"}, 
@@ -422,7 +422,6 @@ var VotingWindow=React.createClass({displayName: "VotingWindow",
                     votables.push(players[i].fname);
                 }
                 this.setState({count:players.length,voter:players[0].fname,votables:votables});
-                console.log("Received props");
             }
            
     },
@@ -440,7 +439,6 @@ var VotingWindow=React.createClass({displayName: "VotingWindow",
               cVotes:"super",
           }
           this.props.master.dispatchEvent({type:'vote',ejected:stackInfo});
-          console.log(stackInfo);
           $("#vote-window").modal('hide');
           this.reset();
           return;
@@ -612,7 +610,7 @@ var GameController=React.createClass({displayName: "GameController",
                         if(index==0) currentPlayer.state="active";
                         playerArr.push(currentPlayer);
                     });
-                    this.setState({activeContestants:playerArr,contestants:playerArr.slice(0,playerArr.length),MAX_ROUNDS:(playerArr.length-2)});
+                    this.setState({activeContestants:playerArr,contestants:playerArr.slice(0,playerArr.length),MAX_ROUNDS:(playerArr.length-1)});
                     this.state.game.id=gameInfo.game_id;
                 }
                 catch(err)
@@ -662,6 +660,10 @@ var GameController=React.createClass({displayName: "GameController",
                    }
                }
                this.setState({activeContestants:players});
+               host.notifyPlayers(["Lets play the next round"],function(){
+                   $("#int-btn-1").addClass('animated flash focused');
+                   $("#int-btn-1").text('Start round');
+               })
            }.bind(this))
         }.bind(this));
 
@@ -689,7 +691,7 @@ var GameController=React.createClass({displayName: "GameController",
             var players=this.state.activeContestants;
             var c_index=this.state.c_player;
             var thisRound=this.state.c_round-1;
-
+            var updateActive=true;
             if(status==true)
             {
                 game.passed++;
@@ -701,6 +703,7 @@ var GameController=React.createClass({displayName: "GameController",
                     game.rounds[thisRound].moneyBanked+=64000;
                     this.endRound();
                     this.refs.pWindow.endRound();
+                    updateActive=false;
                 }
             }
             else{
@@ -713,12 +716,12 @@ var GameController=React.createClass({displayName: "GameController",
             game.questions++;
             game.answered++;
 
-            resolve({p_hldr:players,g_hldr:game});
+            resolve({p_hldr:players,g_hldr:game,update:updateActive});
         }.bind(this))
     
         promiseToUpdate.then(function(response){
             this.setState({activeContestants:response.p_hldr,game:response.g_hldr})
-            this.setActivePlayer();
+            if(response.update) this.setActivePlayer();
         }.bind(this))
         
     },
@@ -800,6 +803,7 @@ var GameController=React.createClass({displayName: "GameController",
         var game_hldr=this.state.game;
         var player_hldr=this.state.activeContestants;
         var thisRound=(this.state.c_round)+1;
+        var MAX_ROUNDS=this.state.MAX_ROUNDS;
 
          /**
          * reset necessary components from prev round
@@ -819,7 +823,15 @@ var GameController=React.createClass({displayName: "GameController",
         this.setState({game:game_hldr,c_round:thisRound});
 
         // start game time counter 
-        this.refs.pWindow.startRound();
+        if(thisRound!=MAX_ROUNDS)
+        {
+             this.refs.pWindow.startRound();
+        }
+        else{
+           // this.refs.headWindow.startRound();
+           console.log("Boost up round");
+        }
+       
     },
     /**
      * end the current round and make necessary calculations
@@ -862,11 +874,25 @@ var GameController=React.createClass({displayName: "GameController",
         }
         this.setState({activeContestants:player_hldr,contestants:allContestants,game:game_hldr});
         //notify players of perfomance
-        var msgs=["Out of the 64,000 target"];
-        getRoundRemarks(msgs,game_hldr.currentBank);
-        host.notifyPlayers(msgs,function(){
+         var msgs=["Out of the 64,000 target"];
+         getRoundRemarks(msgs,game_hldr.currentBank);
+        if((thisRound+1)<this.state.MAX_ROUNDS){
+            host.notifyPlayers(msgs,function(){
              $('#vote-window').modal('show');
-        })
+             })
+        }
+        else if((thisRound+1)==this.state.MAX_ROUNDS){
+             host.notifyPlayers(msgs,function(){
+                 $("#int-btn-1").addClass('animated flash focused');
+                 $("#int-btn-1").text('Play Last Round');
+             })
+        }
+        else{
+            $("#int-btn-1").addClass('animated flash focused');
+            $("#int-btn-1").text('Play Head to Head');
+        }
+       
+        
 
         
        
