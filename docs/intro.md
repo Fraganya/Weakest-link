@@ -1,4 +1,4 @@
-#Intro
+# Intro
 
 The [Weakest Link](https://en.wikipedia.org/wiki/The_Weakest_Link_(British_game_show) ) is a real world television game show.
 In this game a group of contestants (players) work together to
